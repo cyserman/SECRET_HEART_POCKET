@@ -1,0 +1,37 @@
+{
+  "name": "secret_heart_pocket",
+  "version": "1.0.0",
+  "description": "The Secret Heart Pocket - Premium Story Platform",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "story",
+    "platform",
+    "premium",
+    "legacy"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "autoprefixer": "^10.4.23",
+    "firebase": "^12.7.0",
+    "lucide-react": "^0.562.0",
+    "postcss": "^8.5.6",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0"
+  },
+  "devDependencies": {
+    "vite-plugin-pwa": "^1.2.0"
+  }
+}

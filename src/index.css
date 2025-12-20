@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+}
+
+@layer utilities {
+  .transition-circle {
+    clip-path: circle(0%);
+    animation: circleExpand 1s ease-out;
+  }
+  
+  .transition-funnel {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: funnelExpand 1s ease-out;
+  }
+}
+
+@keyframes circleExpand {
+  from {
+    clip-path: circle(0%);
+  }
+  to {
+    clip-path: circle(100%);
+  }
+}
+
+@keyframes funnelExpand {
+  from {
+    clip-path: polygon(50% 0%, 50% 0%, 50% 100%);
+  }
+  to {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+}
+
