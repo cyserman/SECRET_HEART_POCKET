@@ -229,3 +229,4 @@ This Hello World Pack is **FREE** and part of the Origami Protocol ecosystem. Us
 **Ready to begin? Start Phase 1 and let CHRISTINE guide you! 🚀**
 
 [Get Started](../ORIGAMI_PROTOCOL.md) • [View Demo](https://hello-world-origami.vercel.app) • [Join Community](https://discord.gg/origami-protocol)
+

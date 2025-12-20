@@ -320,3 +320,4 @@ saas-app/
 
 **Price: $49** | **Includes**: Full codebase, Firebase setup, Stripe integration, Launch support
 **Guarantee**: Launch your SaaS or get your money back
+

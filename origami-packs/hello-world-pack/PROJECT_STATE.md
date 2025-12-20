@@ -174,3 +174,4 @@ By the end of Phase 4, you'll have:
 *"The journey of a thousand apps begins with a single fold."*
 
 **Ready to begin? Start Phase 1 and let CHRISTINE be your guide! 🚀**
+
