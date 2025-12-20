@@ -152,6 +152,7 @@ SECRET_HEART_POCKET/
 ### 2025-12-20 - Origami Protocol White Paper & GTM
 - ✍️ Authored `ORIGAMI_PROTOCOL_WHITEPAPER.md` outlining the technical protocol (Folded Map, Christine logic, drift defense) and go-to-market strategy (brand, neurodivergent positioning, product mix, launch campaigns).
 - ✅ Project status unchanged: All phases complete and live; this update adds documentation and GTM playbook for reuse.
+- 🧭 Added in-app empty states for Library and Market views so new/anonymous visitors know to create a story or browse the marketplace instead of seeing a sparse screen.
 
 ---
 

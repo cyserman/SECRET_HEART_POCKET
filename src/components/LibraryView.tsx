@@ -10,6 +10,7 @@ interface LibraryViewProps {
   onReadStory: (story: Story) => void;
   onEditStory: (story: Story) => void;
   onShowLegacyModal: () => void;
+  onBrowseMarket: () => void;
 }
 
 export const LibraryView = ({ 
@@ -18,8 +19,11 @@ export const LibraryView = ({
   onCreateStory, 
   onReadStory, 
   onEditStory,
-  onShowLegacyModal 
+  onShowLegacyModal,
+  onBrowseMarket
 }: LibraryViewProps) => {
+  const hasStories = stories.length > 0;
+
   return (
     <div className="space-y-8">
       {/* Dashboard Pizzazz - Legacy Lock CTA */}
@@ -40,6 +44,36 @@ export const LibraryView = ({
           >
             Activate Now
           </button>
+        </div>
+      )}
+
+      {!hasStories && (
+        <div className="bg-white/70 border border-indigo-100 rounded-3xl p-8 shadow-lg text-center space-y-4">
+          <div className="inline-flex items-center gap-3 bg-indigo-50 text-indigo-900 px-4 py-2 rounded-full font-bold text-xs border border-indigo-100">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Connected. Anonymous account ready. No stories yet.
+          </div>
+          <h2 className="text-2xl font-black text-indigo-900">Start your first memory</h2>
+          <p className="text-sm text-slate-600 max-w-2xl mx-auto">
+            You’re signed in anonymously. Create a story to unlock the editor, or browse the Market to view published stories. Gold perks stay locked until you verify and upgrade.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button 
+              onClick={onCreateStory} 
+              className="px-5 py-3 rounded-full bg-indigo-600 text-white font-bold shadow-md hover:bg-indigo-700 active:scale-95 hover:shadow-lg transition-all"
+            >
+              Create my first story
+            </button>
+            <button 
+              onClick={onBrowseMarket} 
+              className="px-5 py-3 rounded-full bg-white text-indigo-700 font-bold border border-indigo-200 hover:border-indigo-400 active:scale-95 hover:shadow-lg transition-all"
+            >
+              Browse the Market
+            </button>
+          </div>
+          <div className="text-xs text-slate-500">
+            Tip: Library fills with your drafts, purchases, or packaged stories. Market shows published stories once available.
+          </div>
         </div>
       )}
 
@@ -95,4 +129,3 @@ export const LibraryView = ({
     </div>
   );
 };
-
