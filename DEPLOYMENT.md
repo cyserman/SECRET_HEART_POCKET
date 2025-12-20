@@ -9,13 +9,20 @@
 
 ### Step 1: Push to Git
 
+**✅ Git repository already initialized!** Now connect to your remote:
+
 ```bash
-git init
-git add .
-git commit -m "Initial commit - Secret Heart Pocket"
+# Add your remote repository (GitHub, GitLab, or Bitbucket)
 git remote add origin <your-repo-url>
+
+# Push to remote
 git push -u origin main
 ```
+
+**Don't have a remote repo yet?**
+- **GitHub**: Create new repo at https://github.com/new (don't initialize with README)
+- **GitLab**: Create new project at https://gitlab.com/projects/new
+- **Bitbucket**: Create new repository at https://bitbucket.org/repo/create
 
 ### Step 2: Deploy to Vercel
 
