@@ -54,7 +54,7 @@ export default function App() {
           payload
         );
       } else {
-        const newPayload = { ...payload, createdAt: serverTimestamp() };
+        const newPayload: any = { ...payload, createdAt: serverTimestamp() };
         await addDoc(
           collection(db, 'artifacts', appId, 'public', 'data', 'stories'), 
           newPayload

@@ -6,7 +6,7 @@ interface EditorViewProps {
   initialData?: Story | null;
   onSave: (data: Story) => void;
   onCancel: () => void;
-  isGold: boolean;
+  isGold?: boolean;
 }
 
 export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) => {
