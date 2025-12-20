@@ -32,6 +32,7 @@
     "vite": "^7.3.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
     "vite-plugin-pwa": "^1.2.0"
   }
 }

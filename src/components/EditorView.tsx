@@ -9,7 +9,7 @@ interface EditorViewProps {
   isGold: boolean;
 }
 
-export const EditorView = ({ initialData, onSave, onCancel, isGold }: EditorViewProps) => {
+export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) => {
   const [form, setForm] = useState<Story>(
     initialData || { 
       title: "New Story", 

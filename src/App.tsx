@@ -54,10 +54,10 @@ export default function App() {
           payload
         );
       } else {
-        payload.createdAt = serverTimestamp();
+        const newPayload = { ...payload, createdAt: serverTimestamp() };
         await addDoc(
           collection(db, 'artifacts', appId, 'public', 'data', 'stories'), 
-          payload
+          newPayload
         );
       }
       setView('library');
@@ -67,7 +67,7 @@ export default function App() {
     }
   };
 
-  const handlePurchase = (story: Story) => {
+  const handlePurchase = (_story: Story) => {
     // TODO: Implement marketplace purchase logic
     alert("Simulated Purchase - Marketplace economy coming soon!");
   };
