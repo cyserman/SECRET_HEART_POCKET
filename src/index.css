@@ -1,40 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  body {
-    @apply antialiased;
-  }
+/* Global "Pizzazz" Styles */
+body {
+margin: 0;
+min-height: 100vh;
+background: linear-gradient(to bottom right, #eff6ff, #ffffff, #fef3c7);
 }
-
 @layer utilities {
-  .transition-circle {
-    clip-path: circle(0%);
-    animation: circleExpand 1s ease-out;
-  }
-  
-  .transition-funnel {
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    animation: funnelExpand 1s ease-out;
-  }
+.mask-image-linear-gradient {
+mask-image: linear-gradient(to bottom, transparent, black 10%);
 }
-
-@keyframes circleExpand {
-  from {
-    clip-path: circle(0%);
-  }
-  to {
-    clip-path: circle(100%);
-  }
 }
-
-@keyframes funnelExpand {
-  from {
-    clip-path: polygon(50% 0%, 50% 0%, 50% 100%);
-  }
-  to {
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  }
-}
-
