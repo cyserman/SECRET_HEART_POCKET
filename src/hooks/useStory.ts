@@ -18,6 +18,33 @@ export const useStory = (user: User | null, userData: UserData) => {
       return;
     }
 
+    const defaultStory: Story = {
+      id: 'demo-story',
+      title: 'A Daddy Never Stops Loving',
+      author: 'Dad',
+      userId: 'demo',
+      isPublished: true,
+      isPackaged: true,
+      price: 'Gift',
+      createdAt: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 },
+      updatedAt: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 },
+      settings: { mps: 6, transition: 'fade', filter: 'dreamy' },
+      pages: [
+        {
+          text: 'This pocket is a present for the boys—a soft place to keep the moments where we laughed the hardest and learned the most.',
+          images: [{ url: DEFAULT_IMAGES[0] }]
+        },
+        {
+          text: 'Every story we add here grows a little brighter. The new bank accounts are our treasure chests; the profits from this app sail there to fund your adventures.',
+          images: [{ url: DEFAULT_IMAGES[0] }]
+        },
+        {
+          text: 'No matter where you go, this pocket follows. A daddy never stops loving. This is your map, your memory vault, and your launchpad.',
+          images: [{ url: DEFAULT_IMAGES[0] }]
+        }
+      ]
+    };
+
     const appId = getAppId();
     const storiesRef = collection(db, 'artifacts', appId, 'public', 'data', 'stories');
     const q = query(storiesRef);
@@ -58,13 +85,17 @@ export const useStory = (user: User | null, userData: UserData) => {
       });
 
       setStories(
-        myStories.map(normalize).sort((a, b) => 
+        (myStories.length > 0 ? myStories : [defaultStory])
+          .map(normalize)
+          .sort((a, b) => 
           (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
         )
       );
       
       setMarketStories(
-        market.map(normalize).sort((a, b) => 
+        (market.length > 0 ? market : [defaultStory])
+          .map(normalize)
+          .sort((a, b) => 
           (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
         )
       );
@@ -77,4 +108,3 @@ export const useStory = (user: User | null, userData: UserData) => {
 
   return { stories, marketStories, loading };
 };
-

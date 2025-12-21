@@ -153,6 +153,7 @@ SECRET_HEART_POCKET/
 - ✍️ Authored `ORIGAMI_PROTOCOL_WHITEPAPER.md` outlining the technical protocol (Folded Map, Christine logic, drift defense) and go-to-market strategy (brand, neurodivergent positioning, product mix, launch campaigns).
 - ✅ Project status unchanged: All phases complete and live; this update adds documentation and GTM playbook for reuse.
 - 🧭 Added in-app empty states for Library and Market views so new/anonymous visitors know to create a story or browse the marketplace instead of seeing a sparse screen.
+- 🎁 Seeded a default demo story (“A Daddy Never Stops Loving”) that appears in Library and Market when no Firestore stories exist—framed as a present for the boys and noting profits flowing to their accounts.
 
 ---
 
