@@ -173,7 +173,7 @@ export default function App() {
         onViewChange={(v) => setView(v)}
       />
 
-      <main className="max-w-6xl mx-auto p-6">
+      <main className="max-w-6xl mx-auto p-6" role="main">
         {view === 'library' && (
           <LibraryView
             stories={stories}

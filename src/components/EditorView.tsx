@@ -211,6 +211,8 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               multiple
               style={{ display: 'none' }}
               onChange={(e) => handleFiles(e.target.files)}
+              aria-hidden="true"
+              tabIndex={-1}
             />
             <UploadCloud size={24} className={isDragging ? 'text-indigo-600' : 'text-slate-400'} />
             <span className={`text-xs font-bold mt-1 ${isDragging ? 'text-indigo-600' : 'text-slate-400'}`}>
