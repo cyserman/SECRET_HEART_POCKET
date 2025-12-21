@@ -42,8 +42,10 @@ export const initializeFirebase = () => {
   
   // Validate config exists and is not empty
   if (!configStr || configStr === '{}' || configStr.trim() === '') {
-    console.error('Firebase config not found! Please set VITE_FIREBASE_CONFIG in Vercel environment variables.');
-    throw new Error('Firebase configuration not found. Please set VITE_FIREBASE_CONFIG environment variable.');
+    console.error('Firebase config not found! Current value:', configStr);
+    console.error('Please set VITE_FIREBASE_CONFIG in Vercel environment variables.');
+    console.error('Expected format: {"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}');
+    throw new Error('Firebase configuration not found. Please set VITE_FIREBASE_CONFIG environment variable in Vercel.');
   }
 
   let firebaseConfig;
