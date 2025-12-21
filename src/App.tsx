@@ -45,12 +45,22 @@ export default function App() {
     alert('Legacy Mode unlocked for this session.');
   };
 
-  const handleCreateStory = (data: { title: string; tagline: string; storyType: number; aiAssist: boolean }) => {
+  const handleCreateStory = (data: { 
+    title: string; 
+    tagline: string; 
+    storyType: number; 
+    aiAssist: boolean;
+    category: string;
+    price: number;
+    visibility: 'circle' | 'marketplace';
+  }) => {
     setCurrentStory({
       title: data.title,
       author: user?.displayName || user?.email || 'Explorer',
       tagline: data.tagline,
-      category: 'FAMILY',
+      category: data.category as any,
+      price: data.price,
+      isPublished: data.visibility === 'marketplace',
       settings: { mps: data.storyType, transition: 'fade', filter: 'none' },
       pages: [{ text: '', images: [] }]
     });

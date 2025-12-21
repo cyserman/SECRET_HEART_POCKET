@@ -11,28 +11,77 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
   // Mock data - in production, these would come from user's actual data
   const helpedCount = 450; // Number of people helped/engaged
   const circlesCount = 4; // Number of circles user is part of
+  const level = Math.floor(storiesCreated / 3) + 1; // Calculate level
+  const storiesOwned = storiesCreated + 12; // Created + purchased
 
   const badges = [
-    { icon: Mic, name: 'Voice Artist', unlocked: false },
-    { icon: Book, name: 'Storyteller', unlocked: true },
-    { icon: ThumbsUp, name: 'Helper', unlocked: true },
+    { icon: Mic, name: 'Voice Artist', unlocked: storiesCreated >= 5 },
+    { icon: Book, name: 'Storyteller', unlocked: storiesCreated >= 1 },
+    { icon: ThumbsUp, name: 'Helper', unlocked: helpedCount >= 100 },
   ];
 
   return (
     <div className="space-y-6 pb-24">
+      {/* Profile Header */}
+      <div className="glass-dark rounded-3xl p-6 border border-slate-700">
+        <div className="flex items-center gap-4">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-3xl text-white font-bold shadow-xl shadow-orange-500/30 border-4 border-orange-300">
+            D
+          </div>
+          <div className="flex-1">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              Daddy
+              {userData.isGoldMember && (
+                <Award size={20} className="text-amber-400 fill-amber-400" />
+              )}
+            </h2>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="text-sm text-orange-400 font-semibold">Level {level}</div>
+              <div className="text-xs text-slate-500">• Dad's Legacy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="card-dark rounded-2xl p-4 text-center">
+      <div className="grid grid-cols-4 gap-3">
+        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
           <div className="text-3xl font-bold text-white">{storiesCreated}</div>
           <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Created</div>
         </div>
-        <div className="card-dark rounded-2xl p-4 text-center">
+        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
+          <div className="text-3xl font-bold text-white">{storiesOwned}</div>
+          <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Owned</div>
+        </div>
+        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
           <div className="text-3xl font-bold text-white">{helpedCount}</div>
           <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Helped</div>
         </div>
-        <div className="card-dark rounded-2xl p-4 text-center">
+        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
           <div className="text-3xl font-bold text-white">{circlesCount}</div>
           <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Circles</div>
+        </div>
+      </div>
+
+      {/* Watch UI Preview */}
+      <div className="card-dark rounded-3xl p-6 border border-slate-700">
+        <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+          <span>🕐</span>
+          Watch Stories
+        </h3>
+        <div className="bg-slate-900 rounded-2xl p-6 space-y-3">
+          <div className="text-center">
+            <div className="inline-block bg-slate-800 rounded-xl px-4 py-2 border border-slate-700">
+              <div className="text-xs text-slate-500 mb-1">Story of the Day</div>
+              <div className="text-sm font-bold text-white">The Sleepy Moon</div>
+              <button className="mt-2 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center mx-auto shadow-lg">
+                ▶
+              </button>
+            </div>
+          </div>
+          <div className="text-xs text-slate-500 text-center">
+            Swipe to change • Tap to play
+          </div>
         </div>
       </div>
 
