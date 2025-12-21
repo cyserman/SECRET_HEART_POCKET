@@ -116,9 +116,24 @@ export default function App() {
   };
 
   const handleSave = async (data) => {
-    if (!user || !db) return;
+    if (!user || !db) {
+      alert("Error: Not signed in. Please refresh the page.");
+      console.error("Save failed: No user or db", { user, db });
+      return;
+    }
     
     try {
+      // Validate story has content
+      if (!data.title || data.title.trim() === '') {
+        alert("Please add a story title before saving.");
+        return;
+      }
+      
+      if (!data.pages || data.pages.length === 0) {
+        alert("Please add at least one page with text or images before saving.");
+        return;
+      }
+      
       const appId = getAppId();
       const payload = { 
         ...data, 
@@ -131,17 +146,19 @@ export default function App() {
           doc(db, 'artifacts', appId, 'public', 'data', 'stories', data.id), 
           payload
         );
+        console.log("Story updated successfully!");
       } else {
         const newPayload = { ...payload, createdAt: serverTimestamp() };
-        await addDoc(
+        const docRef = await addDoc(
           collection(db, 'artifacts', appId, 'public', 'data', 'stories'), 
           newPayload
         );
+        console.log("Story saved successfully! ID:", docRef.id);
       }
       setView('library');
     } catch (e) {
-      alert("Error saving. Reduce image sizes.");
-      console.error(e);
+      console.error("Save error:", e);
+      alert(`Error saving story: ${e.message || "Please check console for details."}`);
     }
   };
 

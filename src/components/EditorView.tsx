@@ -244,14 +244,18 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
                   // Simple AI placeholder - in production, this would call an AI API
                   const aiText = `Once upon a time, ${userPrompt.toLowerCase()}. The memory was captured in this moment, forever preserved in this pocket of time.`;
                   let p = [...form.pages];
-                  p[active].text = aiText;
+                  // APPEND to existing text instead of replacing
+                  const currentText = p[active].text || '';
+                  p[active].text = currentText 
+                    ? `${currentText}\n\n${aiText}` 
+                    : aiText;
                   setForm({...form, pages: p});
                 }
               }}
               className="w-full px-4 py-2 bg-amber-100 text-amber-700 font-bold rounded-xl hover:bg-amber-200 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2 relative z-10"
             >
               <span>✨</span>
-              <span>AI Help - Generate Story Text</span>
+              <span>AI Help - Add to Story</span>
             </button>
           </div>
           <textarea 
