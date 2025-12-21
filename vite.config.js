@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // [https://vitejs.dev/config/](https://vitejs.dev/config/)
 export default defineConfig({
   plugins: [react()],
-  base: './', // CRITICAL: This ensures assets load regardless of server path
+  base: '/', // Use absolute paths for Vercel
   build: {
     outDir: 'dist',
   }

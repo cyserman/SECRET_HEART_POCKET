@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { doc, updateDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db, getAppId } from './lib/firebase';
 import { useAuth } from './hooks/useAuth';
@@ -10,7 +10,21 @@ import { MarketView } from './components/MarketView';
 import { EditorView } from './components/EditorView';
 import { ReaderView } from './components/ReaderView';
 import { LegacyModal } from './components/LegacyModal';
+
 export default function App() {
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Catch any unhandled errors
+    window.addEventListener('error', (e) => {
+      console.error('Global error:', e.error);
+      setError(e.error?.message || 'Unknown error');
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('Unhandled promise rejection:', e.reason);
+      setError(e.reason?.message || 'Promise rejection');
+    });
+  }, []);
   const { user, loading: authLoading } = useAuth();
   const { userData, loading: userLoading } = useUserData(user);
   const { stories, marketStories, loading: storiesLoading } = useStory(user, userData);
@@ -20,6 +34,24 @@ export default function App() {
   const [showLegacyModal, setShowLegacyModal] = useState(false);
 
   const loading = authLoading || userLoading || storiesLoading;
+
+  // Show error if something crashes
+  if (error) {
+    return (
+      <div className="min-h-screen bg-red-50 flex items-center justify-center p-6">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error Loading App</h1>
+          <p className="text-slate-700 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleLegacyActivate = async () => {
     if (!user || !db) return;
