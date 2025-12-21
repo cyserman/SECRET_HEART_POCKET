@@ -102,6 +102,7 @@ export default function App() {
               setView('edit');
             }}
             onShowLegacyModal={() => setShowLegacyModal(true)}
+            onBrowseMarket={() => setView('market')}
           />
         )}
 
@@ -109,6 +110,7 @@ export default function App() {
           <MarketView
             marketStories={marketStories}
             onPurchase={handlePurchase}
+            onBackToLibrary={() => setView('library')}
           />
         )}
 
