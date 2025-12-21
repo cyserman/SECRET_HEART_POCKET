@@ -173,51 +173,53 @@ export default function App() {
         onViewChange={(v) => setView(v)}
       />
 
-      <main className="max-w-6xl mx-auto p-6" role="main">
-        {view === 'library' && (
-          <LibraryView
-            stories={stories}
-            userData={userData}
-            onCreateStory={() => {
-              setCurrentStory(null);
-              setView('edit');
-            }}
-            onReadStory={(story) => {
-              setCurrentStory(story);
-              setView('read');
-            }}
-            onEditStory={(story) => {
-              setCurrentStory(story);
-              setView('edit');
-            }}
-            onShowLegacyModal={() => setShowLegacyModal(true)}
-            onBrowseMarket={() => setView('market')}
+      {view === 'read' && currentStory ? (
+        <main role="main">
+          <ReaderView
+            story={currentStory}
+            onBack={() => setView('library')}
           />
-        )}
+        </main>
+      ) : (
+        <main className="max-w-6xl mx-auto p-6" role="main">
+          {view === 'library' && (
+            <LibraryView
+              stories={stories}
+              userData={userData}
+              onCreateStory={() => {
+                setCurrentStory(null);
+                setView('edit');
+              }}
+              onReadStory={(story) => {
+                setCurrentStory(story);
+                setView('read');
+              }}
+              onEditStory={(story) => {
+                setCurrentStory(story);
+                setView('edit');
+              }}
+              onShowLegacyModal={() => setShowLegacyModal(true)}
+              onBrowseMarket={() => setView('market')}
+            />
+          )}
 
-        {view === 'market' && (
-          <MarketView
-            marketStories={marketStories}
-            onPurchase={handlePurchase}
-            onBackToLibrary={() => setView('library')}
-          />
-        )}
+          {view === 'market' && (
+            <MarketView
+              marketStories={marketStories}
+              onPurchase={handlePurchase}
+              onBackToLibrary={() => setView('library')}
+            />
+          )}
 
-        {view === 'edit' && (
-          <EditorView
-            initialData={currentStory}
-            onSave={handleSave}
-            onCancel={() => setView('library')}
-            isGold={userData.isGoldMember}
-          />
-        )}
-      </main>
-
-      {view === 'read' && currentStory && (
-        <ReaderView
-          story={currentStory}
-          onBack={() => setView('library')}
-        />
+          {view === 'edit' && (
+            <EditorView
+              initialData={currentStory}
+              onSave={handleSave}
+              onCancel={() => setView('library')}
+              isGold={userData.isGoldMember}
+            />
+          )}
+        </main>
       )}
 
       {showLegacyModal && (
