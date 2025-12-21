@@ -9,10 +9,12 @@ import { LibraryView } from './components/LibraryView';
 import { MarketView } from './components/MarketView';
 import { EditorView } from './components/EditorView';
 import { ReaderView } from './components/ReaderView';
+import { ProfileView } from './components/ProfileView';
+import { CirclesView } from './components/CirclesView';
 import { LegacyModal } from './components/LegacyModal';
 import { Story } from './types';
 
-type View = 'library' | 'market' | 'edit' | 'read';
+type View = 'library' | 'market' | 'circles' | 'profile' | 'edit' | 'read';
 
 export default function App() {
   const { user, loading: authLoading } = useAuth();
@@ -82,18 +84,22 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#1a0b2e] flex items-center justify-center text-amber-400 font-serif text-xl animate-pulse">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center text-orange-400 font-serif text-xl animate-pulse">
         Unfolding the Map...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-amber-50 font-sans text-slate-800">
+    <div className="min-h-screen bg-slate-900 font-sans text-slate-100">
       <Navigation 
-        view={view === 'library' || view === 'market' ? view : 'library'} 
+        view={view}
         userData={userData} 
         onViewChange={(v) => setView(v)}
+        onCreateStory={() => {
+          setCurrentStory(null);
+          setView('edit');
+        }}
       />
 
       <main className="max-w-6xl mx-auto p-6">
@@ -123,6 +129,26 @@ export default function App() {
             marketStories={marketStories}
             onPurchase={handlePurchase}
             onBackToLibrary={() => setView('library')}
+          />
+        )}
+
+        {view === 'circles' && (
+          <CirclesView
+            onCreateCircle={() => alert('Create Circle feature coming soon!')}
+            onJoinCircle={() => {
+              const code = prompt('Enter circle invite code:');
+              if (code) {
+                alert(`Joining circle with code: ${code} (feature coming soon!)`);
+              }
+            }}
+          />
+        )}
+
+        {view === 'profile' && (
+          <ProfileView
+            userData={userData}
+            storiesCreated={stories.length}
+            onShowLegacyModal={() => setShowLegacyModal(true)}
           />
         )}
 

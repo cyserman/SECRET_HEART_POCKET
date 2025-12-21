@@ -19,6 +19,7 @@ export interface StoryPage {
 
 export interface StoryImage {
   url: string;
+  path?: string; // Firebase Storage path for deletion/management
 }
 
 export interface StorySettings {

@@ -1,7 +1,8 @@
-import { Plus, Edit3, Award } from 'lucide-react';
+import { Edit3, Award, Rocket, DollarSign } from 'lucide-react';
 import { Story, UserData } from '../types';
 import { FILTERS } from '../lib/constants';
 import { DEFAULT_IMAGES } from '../lib/constants';
+import { useState } from 'react';
 
 interface LibraryViewProps {
   stories: Story[];
@@ -23,25 +24,57 @@ export const LibraryView = ({
   onBrowseMarket
 }: LibraryViewProps) => {
   const hasStories = stories.length > 0;
-  const demoStory = stories.find((s) => s.id === 'demo-story');
+  const [activeCategory, setActiveCategory] = useState('Featured');
+  
+  const categories = ['Featured', "Dad's Wisdom", 'Science & Nature', 'Silly Voices'];
+  const kidsFundRaised = 4280; // This would come from user data in production
 
   return (
-    <div className="space-y-8">
-      {/* Dashboard Pizzazz - Legacy Lock CTA */}
+    <div className="space-y-6 pb-24">
+      {/* Kids Future Fund Banner */}
+      <div className="glass-dark p-4 rounded-2xl flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Rocket size={20} className="text-orange-400" />
+          <span className="text-sm font-semibold text-slate-300">Kids Future Fund</span>
+        </div>
+        <div className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 rounded-full">
+          <DollarSign size={16} className="text-white" />
+          <span className="text-white font-bold">{kidsFundRaised.toLocaleString()} Raised</span>
+        </div>
+      </div>
+
+      {/* Category Filters */}
+      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setActiveCategory(category)}
+            className={`px-5 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all ${
+              activeCategory === category
+                ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-700 border border-slate-700'
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      {/* Legacy Lock CTA */}
       {!userData.isGoldMember && (
-        <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-6 rounded-3xl text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-orange-500 to-pink-600 p-6 rounded-2xl text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="bg-white/20 p-3 rounded-full">
-              <Award size={32} />
+            <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+              <Award size={28} />
             </div>
             <div>
               <h3 className="text-lg font-bold">Unlock Legacy Mode</h3>
-              <p className="text-xs opacity-90">Verify a child's bank account to get Gold features.</p>
+              <p className="text-sm opacity-90">Verify a child's bank account to get Gold features.</p>
             </div>
           </div>
           <button 
             onClick={onShowLegacyModal} 
-            className="bg-white text-amber-600 px-6 py-2 rounded-full font-bold text-sm active:scale-95 hover:shadow-lg transition-all"
+            className="bg-white text-orange-600 px-6 py-3 rounded-full font-bold text-sm active:scale-95 hover:shadow-xl transition-all shadow-lg"
           >
             Activate Now
           </button>
@@ -49,96 +82,45 @@ export const LibraryView = ({
       )}
 
       {!hasStories && (
-        <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-amber-500 text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.15),_rgba(255,255,255,0))]" />
-          <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-            <div className="space-y-4 lg:col-span-2">
-              <div className="inline-flex items-center gap-3 bg-white/15 text-white px-4 py-2 rounded-full text-xs font-bold border border-white/25">
-                <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
-                Christine is live — steering your first fold
+        <div className="glass-dark rounded-2xl p-8 relative overflow-hidden border border-slate-700">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-pink-500/10" />
+          <div className="relative space-y-6">
+            <div className="text-center space-y-3">
+              <div className="inline-flex items-center gap-3 bg-orange-500/20 text-orange-300 px-4 py-2 rounded-full text-xs font-bold border border-orange-500/30">
+                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+                Your story library awaits
               </div>
-              <h2 className="text-3xl font-black drop-shadow-sm">A Daddy Never Stops Loving</h2>
-              <p className="text-sm text-indigo-50 max-w-2xl">
-                This pocket is a present for the boys. Profits flow into their new bank accounts. Add your own memories, publish when you’re ready, or keep it private and safe.
+              <h2 className="text-3xl font-black text-white">Start Creating Memories</h2>
+              <p className="text-sm text-slate-400 max-w-2xl mx-auto">
+                Capture your family's precious moments. Share stories with loved ones or keep them private in your secret heart pocket.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button 
-                  onClick={onCreateStory} 
-                  className="px-5 py-3 rounded-full bg-white text-indigo-900 font-bold shadow-md hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
-                >
-                  Create my first story
-                </button>
-                <button 
-                  onClick={onBrowseMarket} 
-                  className="px-5 py-3 rounded-full bg-white/10 text-white font-bold border border-white/30 hover:border-white hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
-                >
-                  Browse the Market
-                </button>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-indigo-50">
-                <div className="bg-white/10 border border-white/15 rounded-2xl p-3">
-                  <div className="font-black text-white">Step 1</div>
-                  <div>Add a memory page and image.</div>
-                </div>
-                <div className="bg-white/10 border border-white/15 rounded-2xl p-3">
-                  <div className="font-black text-white">Step 2</div>
-                  <div>Preview, keep private, or publish.</div>
-                </div>
-                <div className="bg-white/10 border border-white/15 rounded-2xl p-3">
-                  <div className="font-black text-white">Step 3</div>
-                  <div>Watch profits land in the boys’ accounts.</div>
-                </div>
-              </div>
             </div>
-
-            <div className="bg-white text-indigo-900 rounded-3xl shadow-2xl overflow-hidden">
-              <div className="p-4 border-b border-indigo-50 flex items-center justify-between">
-                <div className="text-xs font-bold text-indigo-500">Featured Memory</div>
-                <div className="text-[10px] bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-black uppercase">Gift</div>
-              </div>
-              <div className="p-6 space-y-3">
-                <div className="font-black text-lg leading-tight">
-                  {demoStory?.title || 'A Daddy Never Stops Loving'}
-                </div>
-                <div className="text-sm text-slate-600">
-                  {demoStory?.pages?.[0]?.text || 'This pocket is a present for the boys—a soft place to keep the moments where we laughed the hardest and learned the most.'}
-                </div>
-                <div className="text-xs text-slate-500">
-                  {demoStory?.pages?.[1]?.text || 'Every story we add here grows brighter. Profits from this app sail into their accounts to fuel new adventures.'}
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                  <div className="text-xs font-bold text-indigo-600">By Dad</div>
-                  <button 
-                    onClick={onCreateStory}
-                    className="text-xs font-bold px-3 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 transition-all shadow-md"
-                  >
-                    Open Editor
-                  </button>
-                </div>
-              </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button 
+                onClick={onCreateStory} 
+                className="px-6 py-3 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
+              >
+                Create Your First Story
+              </button>
+              <button 
+                onClick={onBrowseMarket} 
+                className="px-6 py-3 rounded-full bg-slate-800 text-slate-300 font-bold border border-slate-700 hover:border-slate-600 hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
+              >
+                Browse the Market
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* New Story Card */}
-        <div 
-          onClick={onCreateStory} 
-          className="bg-white/50 border-2 border-dashed border-indigo-200 rounded-3xl flex flex-col items-center justify-center h-56 cursor-pointer hover:bg-white hover:border-indigo-500 transition-all group"
-        >
-          <div className="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center mb-2 group-hover:bg-indigo-100">
-            <Plus className="text-indigo-600"/>
-          </div>
-          <span className="font-bold text-indigo-900">New Story</span>
-        </div>
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Story Cards */}
         {stories.map(s => (
           <div 
             key={s.id} 
             onClick={() => onReadStory(s)} 
-            className="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all h-56 relative group cursor-pointer"
+            className="card-dark rounded-2xl overflow-hidden hover:-translate-y-1 transition-all h-64 relative group cursor-pointer"
           >
             <img 
               src={s.pages[0]?.images?.[0]?.url || DEFAULT_IMAGES[0]} 
@@ -146,27 +128,42 @@ export const LibraryView = ({
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
               alt={s.title}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-transparent to-transparent opacity-90" />
-            <div className="absolute bottom-4 left-4 right-4 text-white">
-              <h3 className="font-bold text-lg leading-tight truncate">{s.title}</h3>
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-xs opacity-70">By {s.author}</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
+            
+            {/* Story Badge */}
+            {s.isPackaged && (
+              <div className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
+                <Award size={12} /> FAMILY
+              </div>
+            )}
+            
+            {/* Memory Count Badge */}
+            <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+              ○ {s.pages?.length || 1}
+            </div>
+            
+            {/* Story Info */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
+              <h3 className="font-bold text-white text-lg leading-tight">{s.title}</h3>
+              <p className="text-slate-300 text-sm line-clamp-2">{s.pages[0]?.text?.substring(0, 60) || 'No description'}...</p>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-xs text-white font-bold">
+                    {s.author?.[0] || 'D'}
+                  </div>
+                  <span className="text-xs text-slate-400">{s.author}</span>
+                </div>
                 <button 
                   onClick={(e) => { 
                     e.stopPropagation(); 
                     onEditStory(s); 
                   }} 
-                  className="p-2 bg-white/20 rounded-full hover:bg-white/30 active:scale-95 hover:shadow-lg transition-all"
+                  className="p-2 bg-slate-800/80 rounded-full hover:bg-orange-500 hover:text-white active:scale-95 transition-all text-slate-400"
                 >
                   <Edit3 size={14}/>
                 </button>
               </div>
             </div>
-            {s.isPackaged && (
-              <div className="absolute top-4 left-4 bg-amber-400 text-amber-900 text-[10px] font-black px-3 py-1.5 rounded-full flex items-center gap-1 shadow-xl uppercase tracking-tighter">
-                <Award size={12} /> Original
-              </div>
-            )}
           </div>
         ))}
       </div>

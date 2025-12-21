@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
-import { UploadCloud } from 'lucide-react';
+import { UploadCloud, Loader2 } from 'lucide-react';
 import { Story } from '../types';
+import { uploadImage } from '../lib/storage';
+import { useAuth } from '../hooks/useAuth';
 
 interface EditorViewProps {
   initialData?: Story | null;
@@ -10,6 +12,7 @@ interface EditorViewProps {
 }
 
 export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) => {
+  const { user } = useAuth();
   const [form, setForm] = useState<Story>(
     initialData || { 
       title: "New Story", 
@@ -21,6 +24,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
   const [active, setActive] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveClick = () => {
@@ -70,64 +74,13 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
     }
   };
 
-  // Compress image to reduce file size (optimized to avoid blocking UI)
-  const compressImage = (file: File, maxWidth = 1920, quality = 0.8): Promise<{ url: string; file: File }> => {
-    return new Promise((resolve) => {
-      // Use requestIdleCallback or setTimeout to avoid blocking UI
-      const processImage = () => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            // Use setTimeout to yield to browser between operations
-            setTimeout(() => {
-              const canvas = document.createElement('canvas');
-              let width = img.width;
-              let height = img.height;
-
-              // Resize if too large
-              if (width > maxWidth) {
-                height = (height * maxWidth) / width;
-                width = maxWidth;
-              }
-
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext('2d');
-              ctx?.drawImage(img, 0, 0, width, height);
-
-              canvas.toBlob(
-                (blob) => {
-                  if (blob) {
-                    const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
-                    const url = URL.createObjectURL(blob);
-                    resolve({ url, file: compressedFile });
-                  } else {
-                    // Fallback if compression fails
-                    resolve({ url: e.target?.result as string, file });
-                  }
-                },
-                'image/jpeg',
-                quality
-              );
-            }, 0);
-          };
-          img.src = e.target?.result as string;
-        };
-        reader.readAsDataURL(file);
-      };
-
-      // Yield to browser before processing
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(processImage, { timeout: 1000 });
-      } else {
-        setTimeout(processImage, 0);
-      }
-    });
-  };
-
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
+    
+    if (!user) {
+      alert('Please wait for authentication to complete before uploading images.');
+      return;
+    }
     
     const imageFiles = Array.from(files).filter(file => 
       file.type.startsWith('image/')
@@ -138,27 +91,43 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
       return;
     }
 
-    // Compress and convert files (process sequentially to avoid blocking UI)
+    // Upload to Firebase Storage
     try {
+      setUploadProgress({ current: 0, total: imageFiles.length });
       const updatedPages = [...form.pages];
       
-      // Process images one at a time to avoid blocking UI
+      // Upload images one at a time with progress tracking
       for (let i = 0; i < imageFiles.length; i++) {
-        const compressed = await compressImage(imageFiles[i]);
-        // Add each image as it's processed
+        const result = await uploadImage(
+          imageFiles[i],
+          user.uid,
+          form.id, // Story ID (if editing existing story)
+          (progress) => {
+            // Optional: Add per-file progress tracking
+            console.log(`Upload ${i + 1}/${imageFiles.length}: ${progress.percent.toFixed(0)}%`);
+          }
+        );
+        
+        // Add uploaded image URL to current page
         updatedPages[active] = {
           ...updatedPages[active],
           images: [
             ...updatedPages[active].images,
-            { url: compressed.url }
+            { url: result.url, path: result.path }
           ]
         };
-        // Update UI incrementally
+        
+        // Update form and progress
         setForm({ ...form, pages: updatedPages });
+        setUploadProgress({ current: i + 1, total: imageFiles.length });
       }
+      
+      // Clear progress indicator
+      setUploadProgress(null);
     } catch (error) {
-      console.error('Error processing images:', error);
-      alert('Error processing images. Please try again.');
+      console.error('Error uploading images:', error);
+      alert('Error uploading images. Please try again.');
+      setUploadProgress(null);
     }
   };
 
@@ -182,10 +151,10 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl border overflow-hidden flex flex-col md:flex-row min-h-[600px]">
-      <div className="w-full md:w-72 bg-slate-50 border-r p-6 space-y-6">
+    <div className="card-dark rounded-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] pb-24">
+      <div className="w-full md:w-72 bg-slate-800 border-r border-slate-700 p-6 space-y-6">
         <div>
-          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">
             Memories Per Story (MPS)
           </label>
           <input 
@@ -197,7 +166,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               ...form, 
               settings: {...form.settings, mps: parseInt(e.target.value)}
             })} 
-            className="w-full accent-indigo-600" 
+            className="w-full accent-orange-500" 
           />
           <div className="flex justify-between text-[10px] font-bold text-slate-500 mt-1">
             <span>Static</span>
@@ -211,12 +180,12 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               onClick={() => setActive(i)} 
               className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
                 active === i 
-                  ? 'border-indigo-600 bg-white shadow-sm' 
-                  : 'border-transparent opacity-60'
+                  ? 'border-orange-500 bg-slate-700 shadow-sm' 
+                  : 'border-transparent bg-slate-900/50 opacity-60 hover:opacity-80'
               }`}
             >
               <div className="text-[10px] font-bold text-slate-400">Page {i+1}</div>
-              <div className="text-xs truncate">{p.text || "..."}</div>
+              <div className="text-xs truncate text-slate-300">{p.text || "..."}</div>
             </div>
           ))}
           <button 
@@ -226,7 +195,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               // Switch to new page immediately
               setTimeout(() => setActive(newPages.length - 1), 0);
             }} 
-            className="w-full py-2 border-2 border-dashed border-indigo-200 rounded-xl text-indigo-400 text-xs font-bold active:scale-95 hover:shadow-lg transition-all"
+            className="w-full py-2 border-2 border-dashed border-slate-600 rounded-xl text-orange-400 text-xs font-bold hover:border-orange-500 active:scale-95 transition-all"
           >
             + Add Page
           </button>
@@ -236,7 +205,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
         <input 
           value={form.title} 
           onChange={e => setForm({...form, title: e.target.value})} 
-          className="text-3xl font-black border-none focus:ring-0 w-full p-0" 
+          className="text-3xl font-black border-none focus:ring-0 w-full p-0 bg-transparent text-white placeholder-slate-600" 
           placeholder="Story Title" 
         />
         <div className="space-y-3">
@@ -250,8 +219,8 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             }}
             className={`h-32 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${
               isDragging 
-                ? 'bg-indigo-50 border-indigo-400 border-solid' 
-                : 'bg-slate-100 border-slate-300 hover:bg-slate-200'
+                ? 'bg-orange-500/10 border-orange-500 border-solid' 
+                : 'bg-slate-800 border-slate-600 hover:bg-slate-700 hover:border-orange-500/50'
             }`}
           >
             <input
@@ -264,21 +233,29 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               aria-hidden="true"
               tabIndex={-1}
             />
-            <UploadCloud size={24} className={isDragging ? 'text-indigo-600' : 'text-slate-400'} />
-            <span className={`text-xs font-bold mt-1 ${isDragging ? 'text-indigo-600' : 'text-slate-400'}`}>
+            <UploadCloud size={24} className={isDragging ? 'text-orange-500' : 'text-slate-500'} />
+            <span className={`text-xs font-bold mt-1 ${isDragging ? 'text-orange-500' : 'text-slate-500'}`}>
               {isDragging ? 'Drop photos here' : 'Drag photos here'}
             </span>
           </div>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-full px-4 py-2 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 active:scale-95 hover:shadow-lg transition-all flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2"
           >
             <UploadCloud size={18} />
-            Upload Photos
+            Upload to Cloud Storage
           </button>
-          {form.pages[active]?.images?.length > 0 && (
-            <div className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg">
-              Page {active + 1}: {form.pages[active].images.length} photo(s) added (automatically compressed)
+          {uploadProgress && (
+            <div className="flex items-center gap-2 text-xs text-orange-400 bg-orange-500/10 p-3 rounded-lg border border-orange-500/20">
+              <Loader2 size={16} className="animate-spin" />
+              <span className="font-semibold">
+                Uploading {uploadProgress.current} of {uploadProgress.total} image(s) to cloud storage...
+              </span>
+            </div>
+          )}
+          {!uploadProgress && form.pages[active]?.images?.length > 0 && (
+            <div className="text-xs text-slate-400 bg-slate-800 p-3 rounded-lg border border-slate-700">
+              Page {active + 1}: {form.pages[active].images.length} photo(s) uploaded to cloud ✓
             </div>
           )}
           {form.pages.map((page, idx) => idx !== active && page.images?.length > 0 && (
@@ -307,7 +284,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
                   setForm({...form, pages: p});
                 }
               }}
-              className="w-full px-4 py-2 bg-amber-100 text-amber-700 font-bold rounded-xl hover:bg-amber-200 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2 relative z-10"
+              className="w-full px-4 py-3 bg-gradient-to-r from-orange-500/20 to-pink-500/20 text-orange-400 font-bold rounded-xl hover:from-orange-500/30 hover:to-pink-500/30 active:scale-95 transition-all border border-orange-500/30 flex items-center justify-center gap-2"
             >
               <span>✨</span>
               <span>AI Help - Add to Story</span>
@@ -325,22 +302,22 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               setForm({...form, pages: p}); 
             }} 
             onFocus={(e) => e.target.select()}
-            className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-slate-300 rounded-xl p-4 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none placeholder:text-slate-400" 
+            className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-slate-700 rounded-xl p-4 bg-slate-800 text-slate-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none placeholder:text-slate-500" 
             placeholder="Write your story here... or click 'AI Help' to get started!" 
             autoFocus={false}
           />
         </div>
-        <div className="flex justify-end gap-3 pt-6 border-t">
+        <div className="flex justify-end gap-3 pt-6 border-t border-slate-700">
           <button 
             onClick={onCancel} 
-            className="px-6 py-2 font-bold text-slate-400 active:scale-95 hover:shadow-lg transition-all"
+            className="px-6 py-3 font-bold text-slate-400 hover:text-slate-300 active:scale-95 transition-all"
           >
             Discard
           </button>
           <button 
             onClick={handleSaveClick}
             disabled={isSaving}
-            className={`px-8 py-2 bg-indigo-600 text-white font-bold rounded-full shadow-lg active:scale-95 hover:shadow-lg transition-all ${
+            className={`px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 active:scale-95 transition-all ${
               isSaving ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
