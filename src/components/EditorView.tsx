@@ -231,8 +231,10 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
           )}
         </div>
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-slate-500">Story Text</label>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-500">Story Text</label>
+            </div>
             <button
               onClick={() => {
                 const userPrompt = window.prompt('Describe your story or memory, and AI will help write it:');
@@ -244,9 +246,10 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
                   setForm({...form, pages: p});
                 }
               }}
-              className="text-xs px-3 py-1 bg-amber-100 text-amber-700 font-bold rounded-full hover:bg-amber-200 active:scale-95 transition-all"
+              className="w-full px-4 py-2 bg-amber-100 text-amber-700 font-bold rounded-xl hover:bg-amber-200 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2 relative z-10"
             >
-              ✨ AI Help
+              <span>✨</span>
+              <span>AI Help - Generate Story Text</span>
             </button>
           </div>
           <textarea 
