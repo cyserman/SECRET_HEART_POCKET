@@ -116,38 +116,50 @@ export default function App() {
   };
 
   const handleSave = async (data) => {
-    if (!user || !db) {
+    console.log("handleSave called with:", data);
+    
+    if (!user) {
       alert("Error: Not signed in. Please refresh the page.");
-      console.error("Save failed: No user or db", { user, db });
+      console.error("Save failed: No user", { user });
+      return;
+    }
+    
+    if (!db) {
+      alert("Error: Database not connected. Please refresh the page.");
+      console.error("Save failed: No db", { db });
       return;
     }
     
     try {
-      // Validate story has content
-      if (!data.title || data.title.trim() === '') {
-        alert("Please add a story title before saving.");
-        return;
-      }
-      
-      if (!data.pages || data.pages.length === 0) {
-        alert("Please add at least one page with text or images before saving.");
-        return;
-      }
-      
       const appId = getAppId();
+      console.log("App ID:", appId);
+      
+      // Clean up data - remove file objects, keep only URLs
+      const cleanData = {
+        ...data,
+        pages: data.pages.map(page => ({
+          ...page,
+          images: page.images.map(img => ({ url: img.url })) // Remove file objects
+        }))
+      };
+      
       const payload = { 
-        ...data, 
+        ...cleanData, 
         updatedAt: serverTimestamp(), 
         userId: user.uid 
       };
       
+      console.log("Saving payload:", payload);
+      
       if (data.id) {
+        console.log("Updating existing story:", data.id);
         await updateDoc(
           doc(db, 'artifacts', appId, 'public', 'data', 'stories', data.id), 
           payload
         );
         console.log("Story updated successfully!");
       } else {
+        console.log("Creating new story");
         const newPayload = { ...payload, createdAt: serverTimestamp() };
         const docRef = await addDoc(
           collection(db, 'artifacts', appId, 'public', 'data', 'stories'), 
@@ -155,10 +167,13 @@ export default function App() {
         );
         console.log("Story saved successfully! ID:", docRef.id);
       }
+      
+      // Navigate back to library
       setView('library');
     } catch (e) {
       console.error("Save error:", e);
-      alert(`Error saving story: ${e.message || "Please check console for details."}`);
+      alert(`Error saving story: ${e.message || "Please check console (F12) for details."}`);
+      throw e; // Re-throw so EditorView can catch it
     }
   };
 

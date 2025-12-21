@@ -20,7 +20,40 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
   );
   const [active, setActive] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleSaveClick = async () => {
+    console.log("Save button clicked!", form);
+    setIsSaving(true);
+    try {
+      // Validate before saving
+      if (!form.title || form.title.trim() === '' || form.title === 'New Story') {
+        alert("Please change the story title from 'New Story' to something meaningful.");
+        setIsSaving(false);
+        return;
+      }
+      
+      const hasContent = form.pages.some(page => 
+        (page.text && page.text.trim() !== '') || 
+        (page.images && page.images.length > 0)
+      );
+      
+      if (!hasContent) {
+        alert("Please add some text or photos to at least one page before saving.");
+        setIsSaving(false);
+        return;
+      }
+      
+      console.log("Calling onSave with:", form);
+      await onSave(form);
+    } catch (error) {
+      console.error("Save error in EditorView:", error);
+      alert(`Error: ${error.message || 'Failed to save story'}`);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   // Compress image to reduce file size (optimized to avoid blocking UI)
   const compressImage = (file: File, maxWidth = 1920, quality = 0.8): Promise<{ url: string; file: File }> => {
@@ -277,10 +310,13 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             Discard
           </button>
           <button 
-            onClick={() => onSave(form)} 
-            className="px-8 py-2 bg-indigo-600 text-white font-bold rounded-full shadow-lg active:scale-95 hover:shadow-lg transition-all"
+            onClick={handleSaveClick}
+            disabled={isSaving}
+            className={`px-8 py-2 bg-indigo-600 text-white font-bold rounded-full shadow-lg active:scale-95 hover:shadow-lg transition-all ${
+              isSaving ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
-            Save Adventure
+            {isSaving ? 'Saving...' : 'Save Adventure'}
           </button>
         </div>
       </div>
