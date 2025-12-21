@@ -10,13 +10,22 @@ if (!rootElement) {
     document.body.innerHTML = "<h1 style='color:white'>CRITICAL ERROR: Root element missing. Check index.html</h1>";
 } else {
     try {
-        ReactDOM.createRoot(rootElement).render(
+        // Clear any existing content in root to prevent hydration issues
+        rootElement.innerHTML = '';
+        
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(
           <React.StrictMode>
             <App />
-          </React.StrictMode>,
-        )
+          </React.StrictMode>
+        );
         console.log("React Mounted Successfully");
     } catch (err) {
         console.error("React Crash:", err);
+        rootElement.innerHTML = `<div style="padding: 20px; color: red;">
+          <h1>React Error</h1>
+          <p>${err.message}</p>
+          <pre>${err.stack}</pre>
+        </div>`;
     }
 }

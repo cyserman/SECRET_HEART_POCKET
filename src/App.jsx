@@ -17,23 +17,34 @@ export default function App() {
 
   useEffect(() => {
     // Catch any unhandled errors
-    window.addEventListener('error', (e) => {
+    const handleError = (e) => {
       console.error('Global error:', e.error);
       const msg = e.error?.message || 'Unknown error';
       setError(msg);
-      if (msg.includes('Firebase') || msg.includes('configuration') || msg.includes('auth/configuration')) {
+      if (msg.includes('Firebase') || msg.includes('configuration') || msg.includes('auth/configuration') || msg.includes('418')) {
         setFirebaseError(msg);
       }
-    });
-    window.addEventListener('unhandledrejection', (e) => {
+    };
+    
+    const handleRejection = (e) => {
       console.error('Unhandled promise rejection:', e.reason);
       const msg = e.reason?.message || String(e.reason) || 'Promise rejection';
       setError(msg);
-      if (msg.includes('Firebase') || msg.includes('configuration') || msg.includes('auth/configuration')) {
+      if (msg.includes('Firebase') || msg.includes('configuration') || msg.includes('auth/configuration') || msg.includes('418')) {
         setFirebaseError(msg);
       }
-    });
+    };
+    
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleRejection);
+    
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleRejection);
+    };
   }, []);
+
+  // Hooks must be called unconditionally
   const { user, loading: authLoading } = useAuth();
   const { userData, loading: userLoading } = useUserData(user);
   const { stories, marketStories, loading: storiesLoading } = useStory(user, userData);
