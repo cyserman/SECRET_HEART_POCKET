@@ -22,46 +22,59 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Compress image to reduce file size
+  // Compress image to reduce file size (optimized to avoid blocking UI)
   const compressImage = (file: File, maxWidth = 1920, quality = 0.8): Promise<{ url: string; file: File }> => {
     return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
+      // Use requestIdleCallback or setTimeout to avoid blocking UI
+      const processImage = () => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            // Use setTimeout to yield to browser between operations
+            setTimeout(() => {
+              const canvas = document.createElement('canvas');
+              let width = img.width;
+              let height = img.height;
 
-          // Resize if too large
-          if (width > maxWidth) {
-            height = (height * maxWidth) / width;
-            width = maxWidth;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
-                const url = URL.createObjectURL(blob);
-                resolve({ url, file: compressedFile });
-              } else {
-                // Fallback if compression fails
-                resolve({ url: e.target?.result as string, file });
+              // Resize if too large
+              if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
               }
-            },
-            'image/jpeg',
-            quality
-          );
+
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx?.drawImage(img, 0, 0, width, height);
+
+              canvas.toBlob(
+                (blob) => {
+                  if (blob) {
+                    const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
+                    const url = URL.createObjectURL(blob);
+                    resolve({ url, file: compressedFile });
+                  } else {
+                    // Fallback if compression fails
+                    resolve({ url: e.target?.result as string, file });
+                  }
+                },
+                'image/jpeg',
+                quality
+              );
+            }, 0);
+          };
+          img.src = e.target?.result as string;
         };
-        img.src = e.target?.result as string;
+        reader.readAsDataURL(file);
       };
-      reader.readAsDataURL(file);
+
+      // Yield to browser before processing
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(processImage, { timeout: 1000 });
+      } else {
+        setTimeout(processImage, 0);
+      }
     });
   };
 
@@ -77,22 +90,25 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
       return;
     }
 
-    // Compress and convert files
+    // Compress and convert files (process sequentially to avoid blocking UI)
     try {
-      const compressedImages = await Promise.all(
-        imageFiles.map(file => compressImage(file))
-      );
-
       const currentPage = form.pages[active];
       const updatedPages = [...form.pages];
-      updatedPages[active] = {
-        ...currentPage,
-        images: [
-          ...currentPage.images,
-          ...compressedImages.map(img => ({ url: img.url }))
-        ]
-      };
-      setForm({ ...form, pages: updatedPages });
+      
+      // Process images one at a time to avoid blocking UI
+      for (let i = 0; i < imageFiles.length; i++) {
+        const compressed = await compressImage(imageFiles[i]);
+        // Add each image as it's processed
+        updatedPages[active] = {
+          ...updatedPages[active],
+          images: [
+            ...updatedPages[active].images,
+            { url: compressed.url }
+          ]
+        };
+        // Update UI incrementally
+        setForm({ ...form, pages: updatedPages });
+      }
     } catch (error) {
       console.error('Error processing images:', error);
       alert('Error processing images. Please try again.');
