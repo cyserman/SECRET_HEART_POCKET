@@ -34,13 +34,32 @@ export const initializeFirebase = () => {
       ? __firebase_config 
       : (typeof window !== 'undefined' && window.__firebase_config)
         ? window.__firebase_config
-        : import.meta.env.VITE_FIREBASE_CONFIG || '{}';
+        : import.meta.env.VITE_FIREBASE_CONFIG || '';
   } catch {
     // Fallback to environment variable
-    configStr = import.meta.env.VITE_FIREBASE_CONFIG || '{}';
+    configStr = import.meta.env.VITE_FIREBASE_CONFIG || '';
   }
   
-  const firebaseConfig = JSON.parse(configStr);
+  // Validate config exists and is not empty
+  if (!configStr || configStr === '{}' || configStr.trim() === '') {
+    console.error('Firebase config not found! Please set VITE_FIREBASE_CONFIG in Vercel environment variables.');
+    throw new Error('Firebase configuration not found. Please set VITE_FIREBASE_CONFIG environment variable.');
+  }
+
+  let firebaseConfig;
+  try {
+    firebaseConfig = JSON.parse(configStr);
+  } catch (e) {
+    console.error('Invalid Firebase config JSON:', e);
+    throw new Error('Invalid Firebase configuration format. Must be valid JSON.');
+  }
+
+  // Validate required fields
+  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    console.error('Firebase config missing required fields:', firebaseConfig);
+    throw new Error('Firebase configuration missing required fields (apiKey, projectId).');
+  }
+
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);

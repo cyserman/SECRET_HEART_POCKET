@@ -13,16 +13,25 @@ import { LegacyModal } from './components/LegacyModal';
 
 export default function App() {
   const [error, setError] = useState(null);
+  const [firebaseError, setFirebaseError] = useState(null);
 
   useEffect(() => {
     // Catch any unhandled errors
     window.addEventListener('error', (e) => {
       console.error('Global error:', e.error);
-      setError(e.error?.message || 'Unknown error');
+      const msg = e.error?.message || 'Unknown error';
+      setError(msg);
+      if (msg.includes('Firebase') || msg.includes('configuration') || msg.includes('auth/configuration')) {
+        setFirebaseError(msg);
+      }
     });
     window.addEventListener('unhandledrejection', (e) => {
       console.error('Unhandled promise rejection:', e.reason);
-      setError(e.reason?.message || 'Promise rejection');
+      const msg = e.reason?.message || String(e.reason) || 'Promise rejection';
+      setError(msg);
+      if (msg.includes('Firebase') || msg.includes('configuration') || msg.includes('auth/configuration')) {
+        setFirebaseError(msg);
+      }
     });
   }, []);
   const { user, loading: authLoading } = useAuth();
@@ -35,8 +44,38 @@ export default function App() {
 
   const loading = authLoading || userLoading || storiesLoading;
 
-  // Show error if something crashes
-  if (error) {
+  // Show Firebase config error with helpful message
+  if (firebaseError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-amber-50 flex items-center justify-center p-6">
+        <div className="bg-white rounded-3xl shadow-xl p-8 max-w-2xl border border-indigo-100">
+          <h1 className="text-3xl font-black text-indigo-900 mb-4">🔧 Configuration Needed</h1>
+          <p className="text-slate-700 mb-6">
+            Firebase configuration is missing. Please set environment variables in Vercel.
+          </p>
+          <div className="bg-indigo-50 rounded-lg p-4 mb-6 text-sm">
+            <p className="font-bold text-indigo-900 mb-2">Quick Fix:</p>
+            <ol className="list-decimal list-inside space-y-2 text-slate-700">
+              <li>Go to <a href="https://vercel.com/cysermans-projects/secret-heart-pocket/settings/environment-variables" target="_blank" className="text-indigo-600 underline">Vercel Environment Variables</a></li>
+              <li>Add <code className="bg-white px-2 py-1 rounded">VITE_FIREBASE_CONFIG</code> with your Firebase config JSON</li>
+              <li>Add <code className="bg-white px-2 py-1 rounded">VITE_APP_ID</code> = <code className="bg-white px-2 py-1 rounded">secret-heart-pocket</code></li>
+              <li>Redeploy the project</li>
+            </ol>
+          </div>
+          <p className="text-xs text-slate-500 mb-4">Error: {firebaseError}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-6 py-3 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 active:scale-95 transition-all"
+          >
+            Reload After Fix
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show generic error if something crashes
+  if (error && !firebaseError) {
     return (
       <div className="min-h-screen bg-red-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl">
