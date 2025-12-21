@@ -152,8 +152,15 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#1a0b2e] flex items-center justify-center text-amber-400 font-serif text-xl animate-pulse">
-        Unfolding the Map...
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-amber-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="text-indigo-600 font-serif text-2xl font-bold animate-pulse">
+            Unfolding the Map...
+          </div>
+          <div className="text-slate-500 text-sm">
+            Loading your stories...
+          </div>
+        </div>
       </div>
     );
   }

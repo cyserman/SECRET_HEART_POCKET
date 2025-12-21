@@ -179,10 +179,14 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={(e) => {
+              e.stopPropagation();
+              fileInputRef.current?.click();
+            }}
             className={`h-32 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${
               isDragging 
                 ? 'bg-indigo-50 border-indigo-400 border-solid' 
-                : 'bg-slate-100 border-slate-300'
+                : 'bg-slate-100 border-slate-300 hover:bg-slate-200'
             }`}
           >
             <input
@@ -237,7 +241,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               p[active].text = e.target.value; 
               setForm({...form, pages: p}); 
             }} 
-            className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none" 
+            className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-slate-300 rounded-xl p-4 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none placeholder:text-slate-400" 
             placeholder="Write your story here... or click 'AI Help' to get started!" 
           />
         </div>
