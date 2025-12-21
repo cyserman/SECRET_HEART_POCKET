@@ -92,7 +92,6 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
 
     // Compress and convert files (process sequentially to avoid blocking UI)
     try {
-      const currentPage = form.pages[active];
       const updatedPages = [...form.pages];
       
       // Process images one at a time to avoid blocking UI
