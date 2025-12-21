@@ -50,6 +50,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
       try {
         console.log("Calling onSave with:", form);
         await onSave(form);
+        setIsSaving(false);
       } catch (error: any) {
         console.error("Save error in EditorView:", error);
         alert(`Error: ${error?.message || 'Failed to save story'}`);
@@ -208,10 +209,12 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             </div>
           ))}
           <button 
-            onClick={() => setForm({
-              ...form, 
-              pages: [...form.pages, { text: "", images: [] }]
-            })} 
+            onClick={() => {
+              const newPages = [...form.pages, { text: "", images: [] }];
+              setForm({...form, pages: newPages});
+              // Switch to new page immediately
+              setTimeout(() => setActive(newPages.length - 1), 0);
+            }} 
             className="w-full py-2 border-2 border-dashed border-indigo-200 rounded-xl text-indigo-400 text-xs font-bold active:scale-95 hover:shadow-lg transition-all"
           >
             + Add Page
@@ -262,11 +265,16 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             <UploadCloud size={18} />
             Upload Photos
           </button>
-          {form.pages[active].images.length > 0 && (
+          {form.pages[active]?.images?.length > 0 && (
             <div className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg">
-              {form.pages[active].images.length} photo(s) added (automatically compressed)
+              Page {active + 1}: {form.pages[active].images.length} photo(s) added (automatically compressed)
             </div>
           )}
+          {form.pages.map((page, idx) => idx !== active && page.images?.length > 0 && (
+            <div key={`photo-hint-${idx}`} className="text-xs text-slate-400 italic">
+              Page {idx + 1} has {page.images.length} photo(s)
+            </div>
+          ))}
         </div>
         <div className="space-y-2">
           <div className="flex flex-col gap-2">
@@ -295,14 +303,20 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             </button>
           </div>
           <textarea 
-            value={form.pages[active].text} 
+            key={`textarea-${active}`}
+            value={form.pages[active]?.text || ''} 
             onChange={e => { 
               let p = [...form.pages]; 
+              if (!p[active]) {
+                p[active] = { text: "", images: [] };
+              }
               p[active].text = e.target.value; 
               setForm({...form, pages: p}); 
             }} 
+            onFocus={(e) => e.target.select()}
             className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-slate-300 rounded-xl p-4 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none placeholder:text-slate-400" 
             placeholder="Write your story here... or click 'AI Help' to get started!" 
+            autoFocus={false}
           />
         </div>
         <div className="flex justify-end gap-3 pt-6 border-t">
@@ -326,4 +340,3 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
     </div>
   );
 };
-

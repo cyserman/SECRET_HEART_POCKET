@@ -23,6 +23,7 @@ export const LibraryView = ({
   onBrowseMarket
 }: LibraryViewProps) => {
   const hasStories = stories.length > 0;
+  const demoStory = stories.find((s) => s.id === 'demo-story');
 
   return (
     <div className="space-y-8">
@@ -48,31 +49,74 @@ export const LibraryView = ({
       )}
 
       {!hasStories && (
-        <div className="bg-white/70 border border-indigo-100 rounded-3xl p-8 shadow-lg text-center space-y-4">
-          <div className="inline-flex items-center gap-3 bg-indigo-50 text-indigo-900 px-4 py-2 rounded-full font-bold text-xs border border-indigo-100">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Connected. Anonymous account ready. No stories yet.
-          </div>
-          <h2 className="text-2xl font-black text-indigo-900">Start your first memory</h2>
-          <p className="text-sm text-slate-600 max-w-2xl mx-auto">
-            You’re signed in anonymously. Create a story to unlock the editor, or browse the Market to view published stories. Gold perks stay locked until you verify and upgrade.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button 
-              onClick={onCreateStory} 
-              className="px-5 py-3 rounded-full bg-indigo-600 text-white font-bold shadow-md hover:bg-indigo-700 active:scale-95 hover:shadow-lg transition-all"
-            >
-              Create my first story
-            </button>
-            <button 
-              onClick={onBrowseMarket} 
-              className="px-5 py-3 rounded-full bg-white text-indigo-700 font-bold border border-indigo-200 hover:border-indigo-400 active:scale-95 hover:shadow-lg transition-all"
-            >
-              Browse the Market
-            </button>
-          </div>
-          <div className="text-xs text-slate-500">
-            Tip: Library fills with your drafts, purchases, or packaged stories. Market shows published stories once available.
+        <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-amber-500 text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.15),_rgba(255,255,255,0))]" />
+          <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+            <div className="space-y-4 lg:col-span-2">
+              <div className="inline-flex items-center gap-3 bg-white/15 text-white px-4 py-2 rounded-full text-xs font-bold border border-white/25">
+                <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
+                Christine is live — steering your first fold
+              </div>
+              <h2 className="text-3xl font-black drop-shadow-sm">A Daddy Never Stops Loving</h2>
+              <p className="text-sm text-indigo-50 max-w-2xl">
+                This pocket is a present for the boys. Profits flow into their new bank accounts. Add your own memories, publish when you’re ready, or keep it private and safe.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button 
+                  onClick={onCreateStory} 
+                  className="px-5 py-3 rounded-full bg-white text-indigo-900 font-bold shadow-md hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
+                >
+                  Create my first story
+                </button>
+                <button 
+                  onClick={onBrowseMarket} 
+                  className="px-5 py-3 rounded-full bg-white/10 text-white font-bold border border-white/30 hover:border-white hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
+                >
+                  Browse the Market
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-indigo-50">
+                <div className="bg-white/10 border border-white/15 rounded-2xl p-3">
+                  <div className="font-black text-white">Step 1</div>
+                  <div>Add a memory page and image.</div>
+                </div>
+                <div className="bg-white/10 border border-white/15 rounded-2xl p-3">
+                  <div className="font-black text-white">Step 2</div>
+                  <div>Preview, keep private, or publish.</div>
+                </div>
+                <div className="bg-white/10 border border-white/15 rounded-2xl p-3">
+                  <div className="font-black text-white">Step 3</div>
+                  <div>Watch profits land in the boys’ accounts.</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white text-indigo-900 rounded-3xl shadow-2xl overflow-hidden">
+              <div className="p-4 border-b border-indigo-50 flex items-center justify-between">
+                <div className="text-xs font-bold text-indigo-500">Featured Memory</div>
+                <div className="text-[10px] bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-black uppercase">Gift</div>
+              </div>
+              <div className="p-6 space-y-3">
+                <div className="font-black text-lg leading-tight">
+                  {demoStory?.title || 'A Daddy Never Stops Loving'}
+                </div>
+                <div className="text-sm text-slate-600">
+                  {demoStory?.pages?.[0]?.text || 'This pocket is a present for the boys—a soft place to keep the moments where we laughed the hardest and learned the most.'}
+                </div>
+                <div className="text-xs text-slate-500">
+                  {demoStory?.pages?.[1]?.text || 'Every story we add here grows brighter. Profits from this app sail into their accounts to fuel new adventures.'}
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                  <div className="text-xs font-bold text-indigo-600">By Dad</div>
+                  <button 
+                    onClick={onCreateStory}
+                    className="text-xs font-bold px-3 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 transition-all shadow-md"
+                  >
+                    Open Editor
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

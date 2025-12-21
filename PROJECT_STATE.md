@@ -156,6 +156,8 @@ SECRET_HEART_POCKET/
 - ✅ Project status unchanged: All phases complete and live; this update adds documentation and GTM playbook for reuse.
 - 🧭 Added in-app empty states for Library and Market views so new/anonymous visitors know to create a story or browse the marketplace instead of seeing a sparse screen.
 - 🎁 Seeded a default demo story (“A Daddy Never Stops Loving”) that appears in Library and Market when no Firestore stories exist—framed as a present for the boys and noting profits flowing to their accounts.
+- 🎨 Upgraded the Library empty-state hero with a featured demo story card, CTA buttons, and a 3-step “steering” guide so first-time visitors see a polished welcome and clear next actions.
+- 🛠️ Hardened save/auth flows: surfaced a clear message when auth/db aren’t ready, ensured Legacy activation creates the user doc with merge-safe `setDoc`, and added a saving reset to avoid stuck buttons.
 
 ---
 

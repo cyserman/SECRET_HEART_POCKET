@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { doc, updateDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, addDoc, collection, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db, getAppId } from './lib/firebase';
 import { useAuth } from './hooks/useAuth';
 import { useUserData } from './hooks/useUserData';
@@ -26,19 +26,27 @@ export default function App() {
   const loading = authLoading || userLoading || storiesLoading;
 
   const handleLegacyActivate = async () => {
-    if (!user || !db) return;
-    
+    if (!user || !db) {
+      alert('Please wait a moment for sign-in to finish, then try again.');
+      return;
+    }
+
     const appId = getAppId();
     const userRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
-    await updateDoc(userRef, { 
+    await setDoc(userRef, { 
       isGoldMember: true, 
       legacyVerified: true 
-    });
+    }, { merge: true });
     setShowLegacyModal(false);
+    alert('Legacy Mode unlocked for this session.');
   };
 
   const handleSave = async (data: Story) => {
-    if (!user || !db) return;
+    if (!user || !db) {
+      alert('Still connecting... please wait a moment and try saving again.');
+      console.error('Save blocked: missing user or db', { user, db });
+      return;
+    }
     
     try {
       const appId = getAppId();
