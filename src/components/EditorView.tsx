@@ -23,7 +23,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSaveClick = async () => {
+  const handleSaveClick = () => {
     console.log("Save button clicked!", form);
     
     // Validate before saving (synchronous, fast)
@@ -42,21 +42,32 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
       return;
     }
     
-    // Use setTimeout to yield to browser before heavy operation
+    // Set saving state immediately (non-blocking UI update)
     setIsSaving(true);
     
-    // Yield to browser to prevent blocking
-    setTimeout(async () => {
+    // Use requestIdleCallback to completely yield to browser before heavy operation
+    const performSave = async () => {
       try {
         console.log("Calling onSave with:", form);
         await onSave(form);
-        setIsSaving(false);
+        // onSave handles navigation, so isSaving will be reset by component unmount
       } catch (error: any) {
         console.error("Save error in EditorView:", error);
         alert(`Error: ${error?.message || 'Failed to save story'}`);
         setIsSaving(false);
       }
-    }, 0);
+    };
+    
+    // Yield to browser completely - use double setTimeout to ensure browser can paint
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        setTimeout(performSave, 0);
+      }, { timeout: 100 });
+    } else {
+      setTimeout(() => {
+        setTimeout(performSave, 0);
+      }, 50);
+    }
   };
 
   // Compress image to reduce file size (optimized to avoid blocking UI)
