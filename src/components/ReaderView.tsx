@@ -11,7 +11,9 @@ interface ReaderViewProps {
 export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0); // seconds
   const imgs = story.pages.flatMap(p => p.images || []);
+  const totalDuration = (imgs.length || 1) * 5; // 5 seconds per image
 
   useEffect(() => {
     let t: NodeJS.Timeout;
@@ -22,6 +24,30 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
       if (t) clearInterval(t);
     };
   }, [playing, imgs.length]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (playing) {
+      timer = setInterval(() => {
+        setCurrentTime(prev => {
+          const next = prev + 1;
+          if (next >= totalDuration) return 0;
+          return next;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [playing, totalDuration]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const progress = (currentTime / totalDuration) * 100;
 
   const handlePrevious = () => {
     setIdx(prev => (prev === 0 ? imgs.length - 1 : prev - 1));
@@ -70,9 +96,23 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
             </div>
 
             {/* Story Title & Subtitle */}
-            <div className="absolute bottom-6 left-6 right-6 text-center">
+            <div className="absolute bottom-6 left-6 right-6 text-center space-y-3">
               <h2 className="text-white text-2xl font-bold mb-2">{story.title}</h2>
-              <p className="text-slate-300 text-sm">{story.pages[idx]?.text?.substring(0, 60) || 'Slide on rings of Saturn.'}</p>
+              <p className="text-slate-300 text-sm">{story.tagline || story.pages[idx]?.text?.substring(0, 60) || 'Slide on rings of Saturn.'}</p>
+              
+              {/* Progress Bar */}
+              <div className="space-y-1">
+                <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-orange-500 rounded-full transition-all duration-1000"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-slate-400">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(totalDuration)}</span>
+                </div>
+              </div>
             </div>
           </div>
 

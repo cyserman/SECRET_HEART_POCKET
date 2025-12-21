@@ -12,6 +12,7 @@ import { ReaderView } from './components/ReaderView';
 import { ProfileView } from './components/ProfileView';
 import { CirclesView } from './components/CirclesView';
 import { LegacyModal } from './components/LegacyModal';
+import { CreateStoryModal } from './components/CreateStoryModal';
 import { Story } from './types';
 
 type View = 'library' | 'market' | 'circles' | 'profile' | 'edit' | 'read';
@@ -24,6 +25,7 @@ export default function App() {
   const [view, setView] = useState<View>('library');
   const [currentStory, setCurrentStory] = useState<Story | null>(null);
   const [showLegacyModal, setShowLegacyModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const loading = authLoading || userLoading || storiesLoading;
 
@@ -41,6 +43,19 @@ export default function App() {
     }, { merge: true });
     setShowLegacyModal(false);
     alert('Legacy Mode unlocked for this session.');
+  };
+
+  const handleCreateStory = (data: { title: string; tagline: string; storyType: number; aiAssist: boolean }) => {
+    setCurrentStory({
+      title: data.title,
+      author: user?.displayName || user?.email || 'Explorer',
+      tagline: data.tagline,
+      category: 'FAMILY',
+      settings: { mps: data.storyType, transition: 'fade', filter: 'none' },
+      pages: [{ text: '', images: [] }]
+    });
+    setShowCreateModal(false);
+    setView('edit');
   };
 
   const handleSave = async (data: Story) => {
@@ -96,10 +111,7 @@ export default function App() {
         view={view}
         userData={userData} 
         onViewChange={(v) => setView(v)}
-        onCreateStory={() => {
-          setCurrentStory(null);
-          setView('edit');
-        }}
+        onCreateStory={() => setShowCreateModal(true)}
       />
 
       <main className="max-w-6xl mx-auto p-6">
@@ -107,10 +119,7 @@ export default function App() {
           <LibraryView
             stories={stories}
             userData={userData}
-            onCreateStory={() => {
-              setCurrentStory(null);
-              setView('edit');
-            }}
+            onCreateStory={() => setShowCreateModal(true)}
             onReadStory={(story) => {
               setCurrentStory(story);
               setView('read');
@@ -173,6 +182,13 @@ export default function App() {
         <LegacyModal
           onActivate={handleLegacyActivate}
           onClose={() => setShowLegacyModal(false)}
+        />
+      )}
+
+      {showCreateModal && (
+        <CreateStoryModal
+          onClose={() => setShowCreateModal(false)}
+          onCreate={handleCreateStory}
         />
       )}
     </div>

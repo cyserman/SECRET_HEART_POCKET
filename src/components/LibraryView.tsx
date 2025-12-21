@@ -1,4 +1,4 @@
-import { Edit3, Award, Rocket, DollarSign } from 'lucide-react';
+import { Award, Rocket, DollarSign } from 'lucide-react';
 import { Story, UserData } from '../types';
 import { FILTERS } from '../lib/constants';
 import { DEFAULT_IMAGES } from '../lib/constants';
@@ -114,53 +114,63 @@ export const LibraryView = ({
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Story Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        {/* Story Cards - Illustrated Style */}
         {stories.map(s => (
           <div 
             key={s.id} 
-            onClick={() => onReadStory(s)} 
-            className="card-dark rounded-2xl overflow-hidden hover:-translate-y-1 transition-all h-64 relative group cursor-pointer"
+            className="card-dark rounded-3xl overflow-hidden hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-500/20 transition-all cursor-pointer group"
           >
-            <img 
-              src={s.pages[0]?.images?.[0]?.url || DEFAULT_IMAGES[0]} 
-              style={{ filter: FILTERS[s.settings?.filter || 'none'].style }} 
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-              alt={s.title}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
-            
-            {/* Story Badge */}
-            {s.isPackaged && (
-              <div className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
-                <Award size={12} /> FAMILY
+            {/* Card Image */}
+            <div 
+              onClick={() => onReadStory(s)}
+              className="relative aspect-square overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900"
+            >
+              <img 
+                src={s.pages[0]?.images?.[0]?.url || DEFAULT_IMAGES[0]} 
+                style={{ filter: FILTERS[s.settings?.filter || 'none'].style }} 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                alt={s.title}
+              />
+              
+              {/* Memory Count Badge - Top Right */}
+              <div className="absolute top-2 right-2 bg-slate-900/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-slate-700">
+                ○ {s.pages?.length || 1}
               </div>
-            )}
-            
-            {/* Memory Count Badge */}
-            <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
-              ○ {s.pages?.length || 1}
+              
+              {/* Category Badge - Top Left */}
+              <div className="absolute top-2 left-2">
+                <div className="bg-orange-600 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider">
+                  {s.category || 'FAMILY'}
+                </div>
+              </div>
             </div>
             
-            {/* Story Info */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
-              <h3 className="font-bold text-white text-lg leading-tight">{s.title}</h3>
-              <p className="text-slate-300 text-sm line-clamp-2">{s.pages[0]?.text?.substring(0, 60) || 'No description'}...</p>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-xs text-white font-bold">
+            {/* Card Footer */}
+            <div className="p-3 space-y-2">
+              <h3 className="font-bold text-white text-sm leading-tight line-clamp-2">
+                {s.title}
+              </h3>
+              <p className="text-slate-400 text-xs line-clamp-1">
+                {s.pages[0]?.text?.substring(0, 40) || 'A magical adventure'}...
+              </p>
+              
+              {/* Author & Actions */}
+              <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-[10px] text-white font-bold">
                     {s.author?.[0] || 'D'}
                   </div>
-                  <span className="text-xs text-slate-400">{s.author}</span>
+                  <span className="text-xs text-slate-500 font-medium">{s.author || 'Dad'}</span>
                 </div>
                 <button 
                   onClick={(e) => { 
                     e.stopPropagation(); 
                     onEditStory(s); 
                   }} 
-                  className="p-2 bg-slate-800/80 rounded-full hover:bg-orange-500 hover:text-white active:scale-95 transition-all text-slate-400"
+                  className="p-1.5 bg-slate-800 rounded-full hover:bg-orange-500 hover:text-white active:scale-95 transition-all text-orange-400 border border-orange-500/30"
                 >
-                  <Edit3 size={14}/>
+                  <DollarSign size={12}/>
                 </button>
               </div>
             </div>

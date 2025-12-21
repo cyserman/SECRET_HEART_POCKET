@@ -16,7 +16,9 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
   const [form, setForm] = useState<Story>(
     initialData || { 
       title: "New Story", 
-      author: "Explorer", 
+      author: "Explorer",
+      tagline: "",
+      category: 'FAMILY',
       settings: { mps: 10, transition: 'fade', filter: 'none' }, 
       pages: [{ text: "", images: [] }] 
     }

@@ -2,6 +2,8 @@ export interface Story {
   id?: string;
   title: string;
   author: string;
+  tagline?: string;
+  category?: 'FAMILY' | 'SCHOOL' | 'FREE' | 'EDUCATOR';
   userId?: string;
   pages: StoryPage[];
   settings: StorySettings;
