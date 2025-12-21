@@ -47,9 +47,9 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
       
       console.log("Calling onSave with:", form);
       await onSave(form);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Save error in EditorView:", error);
-      alert(`Error: ${error.message || 'Failed to save story'}`);
+      alert(`Error: ${error?.message || 'Failed to save story'}`);
     } finally {
       setIsSaving(false);
     }
