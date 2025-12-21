@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, updateDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, addDoc, collection, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db, getAppId } from './lib/firebase';
 import { useAuth } from './hooks/useAuth';
 import { useUserData } from './hooks/useUserData';
@@ -117,16 +117,18 @@ export default function App() {
 
   const handleSave = async (data) => {
     console.log("handleSave called with:", data);
+    console.log("Current user:", user);
+    console.log("Current db:", db);
     
     if (!user) {
-      alert("Error: Not signed in. Please refresh the page.");
-      console.error("Save failed: No user", { user });
+      console.error("Save failed: No user", { user, authLoading, userLoading });
+      alert("Error: Not signed in. The app is trying to sign you in anonymously. Please wait a moment and try again, or refresh the page.");
       return;
     }
     
     if (!db) {
-      alert("Error: Database not connected. Please refresh the page.");
       console.error("Save failed: No db", { db });
+      alert("Error: Database not connected. Please refresh the page.");
       return;
     }
     
@@ -134,14 +136,26 @@ export default function App() {
       const appId = getAppId();
       console.log("App ID:", appId);
       
-      // Clean up data - remove file objects, keep only URLs
-      const cleanData = {
-        ...data,
-        pages: data.pages.map(page => ({
-          ...page,
-          images: page.images.map(img => ({ url: img.url })) // Remove file objects
-        }))
-      };
+      // Clean up data - remove file objects, keep only URLs (do this asynchronously)
+      const cleanData = await new Promise((resolve) => {
+        // Use requestIdleCallback to avoid blocking
+        const cleanup = () => {
+          const cleaned = {
+            ...data,
+            pages: data.pages.map(page => ({
+              ...page,
+              images: page.images.map(img => ({ url: img.url })) // Remove file objects
+            }))
+          };
+          resolve(cleaned);
+        };
+        
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(cleanup, { timeout: 100 });
+        } else {
+          setTimeout(cleanup, 0);
+        }
+      });
       
       const payload = { 
         ...cleanData, 
@@ -168,8 +182,10 @@ export default function App() {
         console.log("Story saved successfully! ID:", docRef.id);
       }
       
-      // Navigate back to library
-      setView('library');
+      // Navigate back to library (yield to browser first)
+      setTimeout(() => {
+        setView('library');
+      }, 0);
     } catch (e) {
       console.error("Save error:", e);
       alert(`Error saving story: ${e.message || "Please check console (F12) for details."}`);

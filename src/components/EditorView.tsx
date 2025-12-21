@@ -25,34 +25,37 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
 
   const handleSaveClick = async () => {
     console.log("Save button clicked!", form);
-    setIsSaving(true);
-    try {
-      // Validate before saving
-      if (!form.title || form.title.trim() === '' || form.title === 'New Story') {
-        alert("Please change the story title from 'New Story' to something meaningful.");
-        setIsSaving(false);
-        return;
-      }
-      
-      const hasContent = form.pages.some(page => 
-        (page.text && page.text.trim() !== '') || 
-        (page.images && page.images.length > 0)
-      );
-      
-      if (!hasContent) {
-        alert("Please add some text or photos to at least one page before saving.");
-        setIsSaving(false);
-        return;
-      }
-      
-      console.log("Calling onSave with:", form);
-      await onSave(form);
-    } catch (error: any) {
-      console.error("Save error in EditorView:", error);
-      alert(`Error: ${error?.message || 'Failed to save story'}`);
-    } finally {
-      setIsSaving(false);
+    
+    // Validate before saving (synchronous, fast)
+    if (!form.title || form.title.trim() === '' || form.title === 'New Story') {
+      alert("Please change the story title from 'New Story' to something meaningful.");
+      return;
     }
+    
+    const hasContent = form.pages.some(page => 
+      (page.text && page.text.trim() !== '') || 
+      (page.images && page.images.length > 0)
+    );
+    
+    if (!hasContent) {
+      alert("Please add some text or photos to at least one page before saving.");
+      return;
+    }
+    
+    // Use setTimeout to yield to browser before heavy operation
+    setIsSaving(true);
+    
+    // Yield to browser to prevent blocking
+    setTimeout(async () => {
+      try {
+        console.log("Calling onSave with:", form);
+        await onSave(form);
+      } catch (error: any) {
+        console.error("Save error in EditorView:", error);
+        alert(`Error: ${error?.message || 'Failed to save story'}`);
+        setIsSaving(false);
+      }
+    }, 0);
   };
 
   // Compress image to reduce file size (optimized to avoid blocking UI)
