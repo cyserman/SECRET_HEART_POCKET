@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Heart } from 'lucide-react';
 import { doc, updateDoc, addDoc, collection, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db, getAppId } from './lib/firebase';
 import { useAuth } from './hooks/useAuth';
@@ -155,27 +156,39 @@ export default function App() {
 
   if (authError) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
-        <div className="max-w-md text-center">
-          <div className="text-6xl mb-4">🔒</div>
-          <h1 className="text-2xl font-serif text-orange-400 mb-4">Authentication Error</h1>
-          <p className="text-slate-300 mb-6">{authError}</p>
-          <div className="bg-slate-800 border border-orange-400/20 rounded-lg p-4 text-left text-sm">
-            <p className="text-orange-400 font-semibold mb-2">To fix this:</p>
-            <ol className="text-slate-300 space-y-2 list-decimal list-inside">
-              <li>Go to <a href="https://console.firebase.google.com" target="_blank" className="text-orange-400 underline">Firebase Console</a></li>
-              <li>Select your project</li>
-              <li>Navigate to Authentication → Sign-in method</li>
-              <li>Enable "Anonymous" authentication</li>
-              <li>Refresh this page</li>
-            </ol>
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="max-w-md">
+          <div className="glass-dark rounded-3xl p-8 text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-orange-500/20 to-red-500/20 ring-8 ring-orange-500/10">
+              <div className="text-4xl">🔒</div>
+            </div>
+            
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold text-white">Authentication Required</h1>
+              <p className="text-slate-400">{authError}</p>
+            </div>
+            
+            <div className="card-dark rounded-2xl p-5 text-left space-y-3">
+              <div className="flex items-center gap-2 text-orange-400 font-semibold">
+                <div className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></div>
+                Quick Fix
+              </div>
+              <ol className="text-slate-300 text-sm space-y-2 list-decimal list-inside">
+                <li>Visit <a href="https://console.firebase.google.com" target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 underline">Firebase Console</a></li>
+                <li>Select your project</li>
+                <li>Go to <span className="text-white font-medium">Authentication → Sign-in method</span></li>
+                <li>Enable <span className="text-white font-medium">"Anonymous"</span> authentication</li>
+                <li>Return here and click Retry</li>
+              </ol>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full btn-orange px-6 py-3.5 rounded-xl font-bold"
+            >
+              Retry Connection
+            </button>
           </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="mt-6 px-6 py-2 bg-orange-400 text-slate-900 rounded-lg hover:bg-orange-300 transition-colors font-semibold"
-          >
-            Retry
-          </button>
         </div>
       </div>
     );
@@ -183,32 +196,58 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center text-orange-400 font-serif text-xl animate-pulse">
-        Unfolding the Map...
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="relative w-20 h-20 mx-auto">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-500 to-pink-600 animate-ping opacity-20"></div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-500 to-pink-600 animate-pulse"></div>
+            <Heart size={40} className="absolute inset-0 m-auto text-white fill-white animate-float" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-bold text-white">Unfolding the Map</h2>
+            <div className="flex items-center justify-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-orange-500 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-orange-500 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-orange-500 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
-        <div className="max-w-md text-center">
-          <div className="text-6xl mb-4">⏳</div>
-          <h1 className="text-2xl font-serif text-orange-400 mb-4">Waiting for Authentication...</h1>
-          <p className="text-slate-300 mb-6">Please enable Anonymous Authentication in Firebase Console</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="px-6 py-2 bg-orange-400 text-slate-900 rounded-lg hover:bg-orange-300 transition-colors font-semibold"
-          >
-            Retry
-          </button>
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="max-w-md">
+          <div className="glass-dark rounded-3xl p-8 text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-orange-500/20 to-amber-500/20 ring-8 ring-orange-500/10 animate-pulse">
+              <div className="text-4xl">⏳</div>
+            </div>
+            
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold text-white">Connecting...</h1>
+              <p className="text-slate-400">Setting up your secure session</p>
+            </div>
+            
+            <p className="text-sm text-slate-500">
+              If this takes too long, anonymous auth might not be enabled
+            </p>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full px-6 py-3 card-dark hover:card-dark rounded-xl font-semibold text-white transition-all"
+            >
+              Refresh Page
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 font-sans text-slate-100">
+    <div className="min-h-screen font-sans text-slate-100">
       <Navigation 
         view={view}
         userData={userData} 
@@ -216,7 +255,7 @@ export default function App() {
         onCreateStory={() => setShowCreateModal(true)}
       />
 
-      <main className="max-w-6xl mx-auto p-6">
+      <main className="max-w-6xl mx-auto p-6 pt-8">
         {view === 'library' && (
           <LibraryView
             stories={stories}
