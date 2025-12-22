@@ -8,7 +8,8 @@ export async function fetchStory(storyId: string) {
 }
 
 export async function fetchPages(storyId: string) {
-  const q = query(collection(db, "stories", storyId, "pages"), orderBy("index", "asc"));
+  // Option A adjustment: Fetch from pagesPublic
+  const q = query(collection(db, "stories", storyId, "pagesPublic"), orderBy("index", "asc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }

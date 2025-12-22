@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp, doc, setDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { auth, db, storage, functions } from "../lib/firebase";
 
@@ -42,10 +42,20 @@ export default function CreateView() {
       const publicUrl = result.data.publicUrl;
       const publicPath = result.data.publicPath;
 
-      await addDoc(collection(db, "stories", storyId, "pages"), {
+      // Option A: Split writes
+      const pageId = uuidv4();
+      
+      // 1. Write public doc
+      await setDoc(doc(db, "stories", storyId, "pagesPublic", pageId), {
         index: 0,
         text: "Once upon a time…",
         publicImageRefs: [{ publicUrl, publicPath }],
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+
+      // 2. Write private doc
+      await setDoc(doc(db, "stories", storyId, "pagesPrivate", pageId), {
         originalImageRefs: [{ storagePath: originalPath }],
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),

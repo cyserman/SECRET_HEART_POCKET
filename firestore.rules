@@ -1,0 +1,86 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+
+    function isOwner(ownerUid) {
+      return isSignedIn() && ownerUid == uid();
+    }
+
+    function isCircleMember(circleId) {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/circles/$(circleId))
+        && (get(/databases/$(database)/documents/circles/$(circleId)).data.memberUids.hasAny([uid()]));
+    }
+
+    function canReadStory(story) {
+      return (story.data.marketVisibility == 'public_obfuscated')
+        || isOwner(story.data.ownerUid)
+        || (story.data.circleId != null && isCircleMember(story.data.circleId));
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn() && userId == uid();
+      allow create: if isSignedIn() && userId == uid();
+      allow update: if isSignedIn() && userId == uid();
+      allow delete: if false;
+    }
+
+    match /circles/{circleId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.ownerUid == uid();
+      allow update: if isSignedIn() && resource.data.ownerUid == uid();
+      allow delete: if false;
+    }
+
+    match /stories/{storyId} {
+      allow read: if canReadStory(resource);
+      allow create: if isSignedIn() && request.resource.data.ownerUid == uid();
+      allow update: if isSignedIn() && resource.data.ownerUid == uid();
+      allow delete: if false;
+
+      // OPTION A: Split pages into public and private subcollections to prevent leaking originalImageRefs
+      match /pagesPublic/{pageId} {
+        allow read: if canReadStory(get(/databases/$(database)/documents/stories/$(storyId)));
+        allow create, update: if isSignedIn()
+          && get(/databases/$(database)/documents/stories/$(storyId)).data.ownerUid == uid();
+        allow delete: if false;
+      }
+
+      match /pagesPrivate/{pageId} {
+        allow read: if isOwner(get(/databases/$(database)/documents/stories/$(storyId)).data.ownerUid);
+        allow create, update: if isSignedIn()
+          && get(/databases/$(database)/documents/stories/$(storyId)).data.ownerUid == uid();
+        allow delete: if false;
+      }
+    }
+
+    match /transactions/{txId} {
+      allow read: if isSignedIn()
+        && (resource.data.fromUid == uid() || resource.data.toUid == uid());
+      allow create, update, delete: if false;
+    }
+
+    match /verifications/{verificationId} {
+      allow read: if isSignedIn() && resource.data.uid == uid();
+      allow create: if isSignedIn() && request.resource.data.uid == uid();
+      allow update, delete: if false;
+    }
+
+    match /platform/{docId} {
+      allow read: if false;
+      allow write: if false;
+    }
+
+    match /platform/{docId}/events/{eventId} {
+      allow read: if false;
+      allow write: if false;
+    }
+
+    match /idempotency/{key} {
+      allow read, write: if false;
+    }
+  }
+}

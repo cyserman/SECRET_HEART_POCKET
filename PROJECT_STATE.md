@@ -15,7 +15,7 @@ Last Updated: 2025-12-22
 - Reader transitions: ripple/warp/sparkle overlays
 
 ## Environment Notes
-- Node: (fill)
+- Node: 18 (Functions)
 - Package manager: npm
 - Firebase Project ID: (fill)
 - Required env vars (Vite):
@@ -37,15 +37,20 @@ Last Updated: 2025-12-22
 - [x] Reader: useStory + ReaderView + Teleprompter + MpsControl + Transitions
 
 ### PHASE 2: The Engine
-- [ ] Firebase init lib/firebase.ts
-- [ ] Firestore rules + Storage rules
-- [ ] Firestore loaders for Reader
-- [ ] CreateView upload pipeline + generatePublicVariant
-- [ ] Cloud Functions: generatePublicVariant, purchaseStory
-- [ ] Admin skeleton + platform aggregates/events
+- [x] Firebase init lib/firebase.ts + authBootstrap
+- [x] Firestore rules + Storage rules (Implemented Option A: pagesPublic/pagesPrivate)
+- [x] Firestore loaders for Reader (Updated to use pagesPublic)
+- [x] CreateView upload pipeline + generatePublicVariant (Writing to pagesPublic/pagesPrivate)
+- [x] Cloud Functions: generatePublicVariant, purchaseStory (Compiled successfully)
+- [ ] Admin skeleton + platform aggregates/events (Scheduled for next fold)
 
 ### Next Instruction (Unfolded)
-Phase 1 Complete. Proceeding to Phase 2: The Engine.
-1) Configure Firebase Rules (Firestore + Storage)
-2) Implement Cloud Functions
-3) Set up Admin routes
+Phase 2 (Engine) Core Complete.
+Ready for Smoke Testing & Admin UI.
+
+1) Set up local environment variables (.env.local)
+2) Run `npm run dev` and test the loop:
+   - Auto-login anonymous
+   - Create Draft -> Upload -> Cloud Function
+   - Reader View display
+3) Implement Admin Skeleton (/admin)
