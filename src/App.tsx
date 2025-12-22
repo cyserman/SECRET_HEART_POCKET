@@ -6,6 +6,7 @@ import LibraryView from "./views/LibraryView";
 import MarketView from "./views/MarketView";
 import CirclesView from "./views/CirclesView";
 import ProfileView from "./views/ProfileView";
+import AdminView from "./views/AdminView";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       <Route path="/market" element={<MarketView />} />
       <Route path="/circles" element={<CirclesView />} />
       <Route path="/profile" element={<ProfileView />} />
+      <Route path="/admin" element={<AdminView />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

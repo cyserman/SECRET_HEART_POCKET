@@ -42,15 +42,17 @@ Last Updated: 2025-12-22
 - [x] Firestore loaders for Reader (Updated to use pagesPublic)
 - [x] CreateView upload pipeline + generatePublicVariant (Writing to pagesPublic/pagesPrivate)
 - [x] Cloud Functions: generatePublicVariant, purchaseStory (Compiled successfully)
-- [ ] Admin skeleton + platform aggregates/events (Scheduled for next fold)
+- [x] Admin skeleton + platform aggregates/events (Implemented /admin, analytics, verifications, redemptions)
+- [x] Client Build Verification (Smoke Test Passed)
 
 ### Next Instruction (Unfolded)
-Phase 2 (Engine) Core Complete.
-Ready for Smoke Testing & Admin UI.
+Phase 2 Complete.
+Ready for Deployment or Local Run.
 
-1) Set up local environment variables (.env.local)
-2) Run `npm run dev` and test the loop:
-   - Auto-login anonymous
-   - Create Draft -> Upload -> Cloud Function
-   - Reader View display
-3) Implement Admin Skeleton (/admin)
+To run locally:
+1. Create `.env.local` with Firebase config.
+2. `npm run dev`
+3. `cd functions && npm run build && firebase emulators:start`
+
+To deploy:
+1. `firebase deploy`
