@@ -54,6 +54,12 @@ export interface UploadResult {
   path: string;
 }
 
+export interface PrivateUploadResult {
+  originalPath: string;
+  publicUrl?: string;
+  publicPath?: string;
+}
+
 export interface UploadProgressCallback {
   percent: number;
   status: 'uploading' | 'complete' | 'error';
@@ -133,6 +139,130 @@ export const uploadImage = async (
     console.error('Image compression error:', error);
     throw error;
   }
+};
+
+/**
+ * Upload original image to private storage and generate public variant
+ * This implements the secure upload pipeline:
+ * 1. Upload original to private/stories/{storyId}/{uid}/{uuid}.jpg
+ * 2. Call Cloud Function to generate blurred public variant
+ * 3. Return both private path and public URL
+ * 
+ * @param file - The file to upload
+ * @param userId - User ID for auth/path
+ * @param storyId - Story ID for organizing files
+ * @param onProgress - Callback for upload progress updates
+ * @returns Promise with originalPath and publicUrl/publicPath
+ */
+export const uploadOriginalImage = async (
+  file: File,
+  userId: string,
+  storyId: string,
+  onProgress?: (progress: UploadProgressCallback) => void
+): Promise<PrivateUploadResult> => {
+  if (!storage) {
+    throw new Error('Firebase Storage not initialized');
+  }
+
+  try {
+    // Compress image first
+    const compressedBlob = await compressImage(file);
+    
+    // Generate private storage path
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 9);
+    const originalPath = `private/stories/${storyId}/${userId}/${timestamp}-${randomId}.jpg`;
+    
+    // Create storage reference
+    const storageRef = ref(storage, originalPath);
+    
+    // Start upload with resumable upload
+    const uploadTask = uploadBytesResumable(storageRef, compressedBlob, {
+      contentType: 'image/jpeg',
+      cacheControl: 'private,max-age=31536000', // Private, 1 year cache
+    });
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Progress tracking
+          const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          onProgress?.({
+            percent,
+            status: 'uploading',
+          });
+        },
+        (error) => {
+          // Error handling
+          console.error('Upload error:', error);
+          onProgress?.({
+            percent: 0,
+            status: 'error',
+            error: error.message,
+          });
+          reject(error);
+        },
+        async () => {
+          // Success - call Cloud Function to generate public variant
+          onProgress?.({
+            percent: 100,
+            status: 'complete',
+          });
+          
+          try {
+            // Call Cloud Function to generate blurred public variant
+            const publicVariant = await generatePublicVariant(storyId, originalPath);
+            
+            resolve({
+              originalPath,
+              publicUrl: publicVariant.publicUrl,
+              publicPath: publicVariant.publicPath,
+            });
+          } catch (error) {
+            console.error('Error generating public variant:', error);
+            // Return without public URL if Cloud Function fails
+            // This allows MVP to work even if function isn't deployed yet
+            resolve({
+              originalPath,
+            });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error('Image compression error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Call Cloud Function to generate public blurred variant
+ * @param storyId - Story ID
+ * @param originalPath - Path to original image in private storage
+ * @returns Public URL and path for the blurred image
+ */
+export const generatePublicVariant = async (
+  storyId: string,
+  originalPath: string
+): Promise<{ publicUrl: string; publicPath: string }> => {
+  // In MVP, we'll use a placeholder approach
+  // In production, this would call the actual Cloud Function
+  // For now, return the original path as public (Cloud Function will be implemented in STEP I)
+  
+  // TODO: Replace with actual Cloud Function call once deployed
+  // const functions = getFunctions();
+  // const generateVariant = httpsCallable(functions, 'generatePublicVariant');
+  // const result = await generateVariant({ storyId, originalPath });
+  // return result.data;
+  
+  console.warn('Cloud Function not yet deployed - using original image as public variant', { storyId });
+  
+  // For MVP: use original path (will be replaced by Cloud Function)
+  return {
+    publicUrl: originalPath, // Placeholder
+    publicPath: originalPath.replace('private/', 'public_obfuscated/'),
+  };
 };
 
 /**

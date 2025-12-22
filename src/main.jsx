@@ -2,6 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
+import { initAuth } from './lib/authBootstrap'
+
+// Initialize anonymous authentication
+initAuth().catch(err => console.error('Auth init failed:', err));
 
 const rootElement = document.getElementById('root');
 

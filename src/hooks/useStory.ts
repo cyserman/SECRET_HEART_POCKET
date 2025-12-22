@@ -69,20 +69,24 @@ export const useStory = (user: User | null, userData: UserData) => {
       );
 
       // Normalize stories (apply MPS logic, ensure images exist)
-      const normalize = (s: Story): Story => ({
-        ...s,
-        pages: (s.pages || []).map(p => ({ 
-          ...p, 
-          images: p.images && p.images.length > 0 
-            ? p.images 
-            : [{ url: DEFAULT_IMAGES[0] }] 
-        })),
-        settings: { 
-          mps: Math.min(Math.max(s.settings?.mps || 10, 1), 10), // Clamp 1-10
-          transition: s.settings?.transition || 'fade', 
-          filter: s.settings?.filter || 'none' 
-        }
-      });
+      const normalize = (s: Story): Story => {
+        const mps = Math.min(Math.max(s.settings?.mps || 10, 1), 10); // Clamp 1-10
+        return {
+          ...s,
+          pages: (s.pages || []).map(p => ({ 
+            ...p, 
+            images: p.images && p.images.length > 0 
+              ? p.images 
+              : [{ url: DEFAULT_IMAGES[0] }] 
+          })),
+          settings: { 
+            mps,
+            mpsDefault: s.settings?.mpsDefault ?? mps, // Add safe default
+            transition: s.settings?.transition || 'fade', 
+            filter: s.settings?.filter || 'none' 
+          }
+        };
+      };
 
       setStories(
         (myStories.length > 0 ? myStories : [defaultStory])

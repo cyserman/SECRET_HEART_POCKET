@@ -77,28 +77,74 @@ export default function App() {
     
     try {
       const appId = getAppId();
-      const payload = { 
-        ...data, 
+      
+      // Separate story metadata (no pages in main doc)
+      const { pages, ...storyMeta } = data;
+      const storyPayload = { 
+        ...storyMeta, 
         updatedAt: serverTimestamp(), 
         userId: user.uid 
       };
       
-      if (data.id) {
+      let storyId = data.id;
+      
+      // Save/update story document
+      if (storyId) {
         await updateDoc(
-          doc(db, 'artifacts', appId, 'public', 'data', 'stories', data.id), 
-          payload
+          doc(db, 'artifacts', appId, 'public', 'data', 'stories', storyId), 
+          storyPayload
         );
       } else {
-        const newPayload: any = { ...payload, createdAt: serverTimestamp() };
-        await addDoc(
+        const newPayload: any = { ...storyPayload, createdAt: serverTimestamp() };
+        const storyRef = await addDoc(
           collection(db, 'artifacts', appId, 'public', 'data', 'stories'), 
           newPayload
         );
+        storyId = storyRef.id;
       }
+      
+      // Save pages to pagesPublic and pagesPrivate subcollections
+      if (pages && pages.length > 0 && storyId) {
+        for (let i = 0; i < pages.length; i++) {
+          const page = pages[i];
+          const pageId = `page-${i}`;
+          
+          // Public data (text + publicImageRefs)
+          const publicData = {
+            index: i,
+            text: page.text || '',
+            publicImageRefs: (page.images || []).map(img => ({
+              publicUrl: img.url,
+              publicPath: img.path || '',
+            })),
+          };
+          
+          // Private data (originalImageRefs)
+          const privateData = {
+            index: i,
+            originalImageRefs: (page.images || []).map(img => ({
+              storagePath: img.path || img.url,
+            })),
+          };
+          
+          // Write to pagesPublic
+          await setDoc(
+            doc(db, 'artifacts', appId, 'public', 'data', 'stories', storyId, 'pagesPublic', pageId),
+            publicData
+          );
+          
+          // Write to pagesPrivate
+          await setDoc(
+            doc(db, 'artifacts', appId, 'public', 'data', 'stories', storyId, 'pagesPrivate', pageId),
+            privateData
+          );
+        }
+      }
+      
       setView('library');
     } catch (e) {
-      alert("Error saving. Reduce image sizes.");
-      console.error(e);
+      alert("Error saving. Please try again.");
+      console.error('Save error:', e);
     }
   };
 
