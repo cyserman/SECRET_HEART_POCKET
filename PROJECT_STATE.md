@@ -1,189 +1,59 @@
-# PROJECT_STATE.md
-## The Secret Heart Pocket - Living Brain (Folded Map Protocol)
+# PROJECT_STATE.md — The Secret Heart Pocket
+Last Updated: 2025-12-22
 
-**Last Updated**: 2024-12-20
-**Status**: 🎉 **FULLY OPERATIONAL - ALL SYSTEMS GO!** 🎉
-**Agent**: CHRISTINE (Autonomous Project Lead)
-**Protocol**: Origami Protocol (Folded Map Architecture)
-**Live URL**: https://secret-heart-pocket.vercel.app
-**Preview URL**: https://secret-heart-pocket-git-main-cysermans-projects.vercel.app
-**Vercel**: Pro Trial Active (2 weeks)
+## Core Directives (Origami Protocol)
+- Work only on the current “visible fold”.
+- After each successful step, update this file automatically.
+- Out-of-scope ideas go to backlog.md.
 
-**✅ ALL ISSUES RESOLVED**: App fully functional, accessibility compliant, ready for use!
+## Locked MVP Decisions
+- Market: public discovery, obfuscated by default
+- Auth: anonymous browsing allowed; auth required for Create/Circles/Coins/Legacy
+- Images: public blurred variants stored; originals private
+- Economy: Cloud Functions enforce coin split + idempotency
+- Owner-only originals in MVP (circle originals via signed URL proxy later)
+- Reader transitions: ripple/warp/sparkle overlays
 
----
+## Environment Notes
+- Node: 18 (Functions)
+- Package manager: npm
+- Firebase Project ID: secret-heart-pocket
+- Required env vars (Vite) [CONFIGURED in .env.local]:
+  - VITE_FIREBASE_API_KEY=...
+  - VITE_FIREBASE_AUTH_DOMAIN=...
+  - VITE_FIREBASE_PROJECT_ID=...
+  - VITE_FIREBASE_STORAGE_BUCKET=...
+  - VITE_FIREBASE_MESSAGING_SENDER_ID=...
+  - VITE_FIREBASE_APP_ID=...
 
-## 🗺️ THE FOLDED MAP (The Roadmap)
+## Roadmap Checklist
 
-### PHASE 1: The Chassis (Setup) ✅ COMPLETE
-- [x] Initialize React/Vite Project
-- [x] Install Tailwind, Lucide, Firebase
-- [x] Create folder structure (/components, /hooks, /lib, /types)
+### PHASE 1: The Chassis
+- [x] Initialize Vite/React/TS project
+- [x] Install deps: tailwindcss postcss autoprefixer lucide-react react-router-dom @tanstack/react-query uuid firebase
+- [x] Folder structure created
+- [x] Tailwind config (brand palette)
+- [x] Home mock implemented as React components
+- [x] Reader: useStory + ReaderView + Teleprompter + MpsControl + Transitions
 
-### PHASE 2: The Engine (Core Logic) ✅ COMPLETE
-- [x] Implement useStory hook (MPS Logic: 1-10 Memories Per Story)
-- [x] Implement "Dreamy" Privacy Filters (CSS Hardware Acceleration)
-- [x] Implement Pocket Coin Economy (50/50 Split Logic) - Purchase handler ready
+### PHASE 2: The Engine
+- [x] Firebase init lib/firebase.ts + authBootstrap
+- [x] Firestore rules + Storage rules (Implemented Option A: pagesPublic/pagesPrivate)
+- [x] Firestore loaders for Reader (Updated to use pagesPublic)
+- [x] CreateView upload pipeline + generatePublicVariant (Writing to pagesPublic/pagesPrivate)
+- [x] Cloud Functions: generatePublicVariant, purchaseStory (Compiled successfully)
+- [x] Admin skeleton + platform aggregates/events (Implemented /admin, analytics, verifications, redemptions)
+- [x] Client Build Verification (Smoke Test Passed)
+- [x] Environment configured (.env.local created)
 
-### PHASE 3: The Paint Job (UI Pizzazz) ✅ COMPLETE
-- [x] Directive: Use bg-gradient-to-br from-indigo-50 via-white to-amber-50
-- [x] Directive: Use "Glassmorphism" for headers (backdrop-blur-xl, bg-white/80)
-- [x] Directive: Buttons must have active:scale-95 and hover:shadow-lg (Snappy feel)
-- [x] Create LibraryView (Dashboard Style with Stats)
-- [x] Create ReaderView (Cinematic Teleprompter)
+### Next Instruction (Unfolded)
+Phase 2 Complete.
+Ready for Deployment or Local Run.
 
-### PHASE 4: The Showroom (Deployment) ✅ COMPLETE & LIVE
-- [x] Configure vite.config.js for PWA (Manifest, Icons, Service Worker)
-- [x] Deploy instructions for Vercel
-- [x] **DEPLOYED TO VERCEL** - Build successful, site is live!
-- [x] Firebase environment variables configured
-- [x] TypeScript errors resolved
-- [x] GitHub repository connected
+To run locally:
+1. `npm run dev`
+2. `cd functions && npm run build && firebase emulators:start`
 
----
-
-## 🧠 Core Directives
-
-**ROLE**: CHRISTINE (Autonomous Project Lead)
-**OBJECTIVE**: Build and Deploy "The Secret Heart Pocket" (Premium Family Story App)
-**CORE DIRECTIVE**: You are the Engine. I am the Driver. Maintain PROJECT_STATE.md as living brain. Self-heal after each task.
-
-**PROTOCOL**: The Origami Protocol (See `ORIGAMI_PROTOCOL.md`)
-- **The Fold**: Focus only on current phase/task
-- **The Refold**: Update this file after every execution cycle
-- **Drift Defense**: Cross-reference state before executing code
-
----
-
-## 📋 Technical Stack
-
-- **Frontend**: Vite + React + TypeScript
-- **Styling**: Tailwind CSS (Glassmorphism effects)
-- **Icons**: Lucide React
-- **Backend**: Firebase (Auth, Firestore, Storage)
-- **Deployment**: Vercel ✅ **LIVE**
-
----
-
-## 🎯 Key Features Implemented
-
-1. **MPS Logic**: 1-10 Memories Per Story (useStory hook) ✅
-2. **Dreamy Privacy**: CSS Blur filters with hardware acceleration ✅
-3. **Pocket Coin Economy**: 50/50 Revenue Split structure ✅
-4. **Legacy Lock**: Gold Membership verification ✅
-5. **Premium UI**: Glassmorphism, gradients, cinematic reader ✅
-
----
-
-## 🛡️ Safety Protocol
-
-- **AI Safety**: Hard-coded rejection of violence, cursing, adult themes
-- **Visual Privacy**: "Dreamy Blur" filter encouraged for public photos
-- **G-Rated**: All content must be family-friendly
-
----
-
-## 📊 Project Health
-
-**Drift Status**: ✅ On Track
-**Last Self-Heal**: 2024-12-20 (ALL PHASES COMPLETE - DEPLOYMENT SUCCESSFUL!)
-**Next Evaluation**: Post-launch monitoring and user feedback
-
-**Git Status**: ✅ Repository initialized, pushed to GitHub: https://github.com/cyserman/SECRET_HEART_POCKET
-**Firebase**: ✅ Project configured (`secret-heart-pocket`), environment variables set in Vercel
-**Deployment**: ✅ **LIVE ON VERCEL** - Build successful, site deployed!
-**Vercel Dashboard**: https://vercel.com/cysermans-projects/secret-heart-pocket
-**Live URL**: https://secret-heart-pocket.vercel.app (verify in Vercel dashboard)
-**Status**: 🚀 **LAUNCHED AND OPERATIONAL**
-
----
-
-## 📁 Project Structure
-
-```
-SECRET_HEART_POCKET/
-├── src/
-│   ├── components/      # React components
-│   │   ├── EditorView.tsx
-│   │   ├── ReaderView.tsx
-│   │   ├── LibraryView.tsx
-│   │   ├── MarketView.tsx
-│   │   ├── LegacyModal.tsx
-│   │   └── Navigation.tsx
-│   ├── hooks/          # Custom hooks
-│   │   ├── useAuth.ts
-│   │   ├── useUserData.ts
-│   │   └── useStory.ts
-│   ├── lib/            # Utilities
-│   │   ├── firebase.ts
-│   │   └── constants.ts
-│   ├── types/          # TypeScript definitions
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
-├── PROJECT_STATE.md
-├── vite.config.ts
-└── package.json
-```
-
----
-
-## 🔄 Change Log
-
-### 2024-12-20 - Phase 1-4 Complete ✅ LAUNCHED & LIVE
-- ✅ Phase 1: Chassis fully operational (React/Vite, Tailwind, Firebase, folder structure)
-- ✅ Phase 2: Engine complete (MPS Logic, Privacy Filters, Coin Economy)
-- ✅ Phase 3: Paint Job polished per directives:
-  - ✅ Gradient updated to `from-indigo-50 via-white to-amber-50`
-  - ✅ Glassmorphism updated to `bg-white/80` with `backdrop-blur-xl`
-  - ✅ All buttons now have `active:scale-95` and `hover:shadow-lg` for snappy feel
-  - ✅ LibraryView and ReaderView fully implemented
-- ✅ Phase 4: Showroom DEPLOYED & LIVE:
-  - ✅ Vite PWA plugin configured with manifest.json
-  - ✅ Service worker with Workbox (auto-update, runtime caching)
-  - ✅ PWA meta tags added to index.html
-  - ✅ Vercel deployment configuration (vercel.json)
-  - ✅ **DEPLOYED TO VERCEL** - Build successful
-  - ✅ Firebase environment variables configured
-  - ✅ TypeScript errors resolved
-  - ✅ GitHub repository connected and synced
-  - ✅ **SITE IS LIVE** - https://secret-heart-pocket.vercel.app
-
-**Refold Assessment**: 🎉 **MISSION ACCOMPLISHED!** The Secret Heart Pocket is LIVE on Vercel. All phases complete. Chassis, Engine, Paint Job, and Showroom operational. Ready for users!
-
-### 2025-12-20 - Origami Protocol White Paper & GTM
-- ✍️ Authored `ORIGAMI_PROTOCOL_WHITEPAPER.md` outlining the technical protocol (Folded Map, Christine logic, drift defense) and go-to-market strategy (brand, neurodivergent positioning, product mix, launch campaigns).
-- ✅ Project status unchanged: All phases complete and live; this update adds documentation and GTM playbook for reuse.
-- 🧭 Added in-app empty states for Library and Market views so new/anonymous visitors know to create a story or browse the marketplace instead of seeing a sparse screen.
-- 🎁 Seeded a default demo story ("A Daddy Never Stops Loving") that appears in Library and Market when no Firestore stories exist—framed as a present for the boys and noting profits flowing to their accounts.
-- 🎨 Upgraded the Library empty-state hero with a featured demo story card, CTA buttons, and a 3-step "steering" guide so first-time visitors see a polished welcome and clear next actions.
-- 🛠️ Hardened save/auth flows: surfaced a clear message when auth/db aren't ready, ensured Legacy activation creates the user doc with merge-safe `setDoc`, and added a saving reset to avoid stuck buttons.
-
-### 2025-12-21 - Firebase Storage Integration (Active Storage Equivalent)
-- 🔥 **MAJOR UPGRADE**: Implemented Firebase Storage for image handling (Google Cloud equivalent of Rails Active Storage)
-- ✅ Created `/src/lib/storage.ts` with comprehensive upload utilities:
-  - `uploadImage()` - Main upload function with progress tracking
-  - `compressImage()` - Client-side image compression (70% bandwidth reduction)
-  - `deleteImage()` - Safe image cleanup
-- 📊 **Performance Improvements**:
-  - Upload time: 75% faster (8s → 2s for 5MB images)
-  - Firestore docs: 99.95% smaller (1MB → 500 bytes)
-  - Image loading: 93% faster (3s → 200ms via CDN)
-- 🎨 **UI Enhancements**:
-  - Real-time upload progress indicators
-  - Sequential image processing (non-blocking UI)
-  - Cloud storage badges and status messages
-  - Completed Profile and Circles views integration
-- 🏗️ **Architecture**:
-  - Images organized by user: `users/{userId}/stories/{storyId}/`
-  - Stores both URL and path for future management
-  - 1-year cache headers for optimal CDN performance
-- 📝 Created `FIREBASE_STORAGE_INTEGRATION.md` - comprehensive documentation
-- ✅ Build successful, all TypeScript errors resolved
-- ✅ Ready for deployment to Vercel
-
-**Refold Assessment**: 🎉 **FIREBASE STORAGE FULLY INTEGRATED!** The app now has enterprise-grade image handling with progress tracking, automatic compression, and CDN optimization. All views polished with dark theme. Build passes. Ready to deploy!
-
----
-
-*Created for Leif & Lewie. Never stop exploring.*
+To deploy:
+1. `firebase login` (Required)
+2. `firebase deploy`
