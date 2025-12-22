@@ -2,60 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark Theme with Orange Accents */
-:root {
-  --color-dark-bg: #0f172a;
-  --color-dark-card: #1e293b;
-  --color-dark-card-hover: #293548;
-  --color-orange-primary: #fb923c;
-  --color-orange-dark: #ea580c;
-  --color-orange-light: #fdba74;
+@keyframes sh-fade-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes sh-ripple {
+  0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 0.0; }
+  15%  { opacity: 0.55; }
+  100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0.0; }
+}
+@keyframes sh-warp {
+  0%   { transform: scale(1.06) skewX(-1deg) skewY(0.5deg); filter: blur(0px); }
+  60%  { transform: scale(1.01) skewX(0deg) skewY(0deg); filter: blur(0.4px); }
+  100% { transform: scale(1.00) skewX(0deg) skewY(0deg); filter: blur(0px); }
+}
+@keyframes sh-sparkle {
+  0%   { opacity: 0; transform: translateY(6px) scale(0.98); }
+  20%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-10px) scale(1.02); }
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  color: #f1f5f9;
-  overflow-x: hidden;
+.sh-slide-enter { animation: sh-fade-in 420ms ease-out; }
+.sh-warp        { animation: sh-warp 520ms ease-out; }
+
+.sh-ripple { position: absolute; inset: 0; pointer-events: none; }
+.sh-ripple::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 35vmin;
+  height: 35vmin;
+  border-radius: 9999px;
+  border: 2px solid rgba(255,255,255,0.25);
+  box-shadow: 0 0 30px rgba(255,255,255,0.10);
+  animation: sh-ripple 520ms ease-out;
 }
 
-@layer utilities {
-  .mask-image-linear-gradient {
-    mask-image: linear-gradient(to bottom, transparent, black 10%);
-  }
-  
-  .glass-dark {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(248, 250, 252, 0.1);
-  }
-  
-  .card-dark {
-    background: var(--color-dark-card);
-    border: 1px solid rgba(248, 250, 252, 0.1);
-    transition: all 0.2s ease;
-  }
-  
-  .card-dark:hover {
-    background: var(--color-dark-card-hover);
-    border-color: rgba(251, 146, 60, 0.2);
-  }
-  
-  .btn-orange {
-    background: var(--color-orange-primary);
-    color: white;
-    font-weight: 600;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-orange:hover {
-    background: var(--color-orange-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 10px 20px rgba(251, 146, 60, 0.3);
-  }
-  
-  .btn-orange:active {
-    transform: scale(0.95);
-  }
+.sh-sparkle { position: absolute; inset: 0; pointer-events: none; }
+.sh-sparkle-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 0 14px rgba(255,255,255,0.45);
+  animation: sh-sparkle 650ms ease-out;
 }
