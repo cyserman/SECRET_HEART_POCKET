@@ -18,7 +18,7 @@ import { Story } from './types';
 type View = 'library' | 'market' | 'circles' | 'profile' | 'edit' | 'read';
 
 export default function App() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, error: authError } = useAuth();
   const { userData, loading: userLoading } = useUserData(user);
   const { stories, marketStories, loading: storiesLoading } = useStory(user, userData);
   
@@ -153,10 +153,56 @@ export default function App() {
     alert("Simulated Purchase - Marketplace economy coming soon!");
   };
 
+  if (authError) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
+        <div className="max-w-md text-center">
+          <div className="text-6xl mb-4">🔒</div>
+          <h1 className="text-2xl font-serif text-orange-400 mb-4">Authentication Error</h1>
+          <p className="text-slate-300 mb-6">{authError}</p>
+          <div className="bg-slate-800 border border-orange-400/20 rounded-lg p-4 text-left text-sm">
+            <p className="text-orange-400 font-semibold mb-2">To fix this:</p>
+            <ol className="text-slate-300 space-y-2 list-decimal list-inside">
+              <li>Go to <a href="https://console.firebase.google.com" target="_blank" className="text-orange-400 underline">Firebase Console</a></li>
+              <li>Select your project</li>
+              <li>Navigate to Authentication → Sign-in method</li>
+              <li>Enable "Anonymous" authentication</li>
+              <li>Refresh this page</li>
+            </ol>
+          </div>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-6 px-6 py-2 bg-orange-400 text-slate-900 rounded-lg hover:bg-orange-300 transition-colors font-semibold"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center text-orange-400 font-serif text-xl animate-pulse">
         Unfolding the Map...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
+        <div className="max-w-md text-center">
+          <div className="text-6xl mb-4">⏳</div>
+          <h1 className="text-2xl font-serif text-orange-400 mb-4">Waiting for Authentication...</h1>
+          <p className="text-slate-300 mb-6">Please enable Anonymous Authentication in Firebase Console</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-6 py-2 bg-orange-400 text-slate-900 rounded-lg hover:bg-orange-300 transition-colors font-semibold"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }

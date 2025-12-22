@@ -31,8 +31,20 @@ export const initAuth = async (): Promise<void> => {
           console.log('✅ Anonymous sign-in successful:', result.user.uid);
           authReady = true;
           authReadyResolve(result.user);
-        } catch (error) {
+        } catch (error: any) {
           console.error('❌ Anonymous sign-in failed:', error);
+          console.error('Error code:', error?.code);
+          console.error('Error message:', error?.message);
+          
+          // Show user-friendly message for common errors
+          if (error?.code === 'auth/configuration-not-found') {
+            console.error('👉 SOLUTION: Enable Anonymous Authentication in Firebase Console');
+            console.error('   1. Go to https://console.firebase.google.com');
+            console.error('   2. Select your project');
+            console.error('   3. Authentication → Sign-in method');
+            console.error('   4. Enable "Anonymous" provider');
+          }
+          
           authReady = true;
           authReadyResolve(null);
         }
