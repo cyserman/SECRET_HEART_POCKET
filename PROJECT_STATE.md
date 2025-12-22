@@ -17,14 +17,14 @@ Last Updated: 2025-12-22
 ## Environment Notes
 - Node: 18 (Functions)
 - Package manager: npm
-- Firebase Project ID: (fill)
-- Required env vars (Vite):
-  - VITE_FIREBASE_API_KEY=
-  - VITE_FIREBASE_AUTH_DOMAIN=
-  - VITE_FIREBASE_PROJECT_ID=
-  - VITE_FIREBASE_STORAGE_BUCKET=
-  - VITE_FIREBASE_MESSAGING_SENDER_ID=
-  - VITE_FIREBASE_APP_ID=
+- Firebase Project ID: secret-heart-pocket
+- Required env vars (Vite) [CONFIGURED in .env.local]:
+  - VITE_FIREBASE_API_KEY=...
+  - VITE_FIREBASE_AUTH_DOMAIN=...
+  - VITE_FIREBASE_PROJECT_ID=...
+  - VITE_FIREBASE_STORAGE_BUCKET=...
+  - VITE_FIREBASE_MESSAGING_SENDER_ID=...
+  - VITE_FIREBASE_APP_ID=...
 
 ## Roadmap Checklist
 
@@ -44,15 +44,16 @@ Last Updated: 2025-12-22
 - [x] Cloud Functions: generatePublicVariant, purchaseStory (Compiled successfully)
 - [x] Admin skeleton + platform aggregates/events (Implemented /admin, analytics, verifications, redemptions)
 - [x] Client Build Verification (Smoke Test Passed)
+- [x] Environment configured (.env.local created)
 
 ### Next Instruction (Unfolded)
 Phase 2 Complete.
 Ready for Deployment or Local Run.
 
 To run locally:
-1. Create `.env.local` with Firebase config.
-2. `npm run dev`
-3. `cd functions && npm run build && firebase emulators:start`
+1. `npm run dev`
+2. `cd functions && npm run build && firebase emulators:start`
 
 To deploy:
-1. `firebase deploy`
+1. `firebase login` (Required)
+2. `firebase deploy`
