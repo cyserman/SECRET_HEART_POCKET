@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Sparkles, Image, Mic, Globe } from 'lucide-react';
 
 interface CreateStoryModalProps {
@@ -42,13 +42,28 @@ export const CreateStoryModal = ({ onClose, onCreate }: CreateStoryModalProps) =
     if (step > 1) setStep(step - 1);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       <div className="w-full max-w-md bg-slate-800 rounded-3xl shadow-2xl border border-slate-700 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-700 bg-slate-900/50">
           <div>
-            <h2 className="text-2xl font-bold text-orange-400">Create Story</h2>
+            <h2 id="modal-title" className="text-2xl font-bold text-orange-400">Create Story</h2>
             <p className="text-xs text-slate-500 mt-1">
               {step === 1 && 'Tell us about your story'}
               {step === 2 && 'Add your content'}
@@ -57,6 +72,7 @@ export const CreateStoryModal = ({ onClose, onCreate }: CreateStoryModalProps) =
           </div>
           <button
             onClick={onClose}
+            aria-label="Close modal"
             className="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center text-slate-300 transition-all active:scale-95"
           >
             <X size={20} />
@@ -70,8 +86,9 @@ export const CreateStoryModal = ({ onClose, onCreate }: CreateStoryModalProps) =
             <>
               {/* Story Title */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-300">Story Title</label>
+                <label htmlFor="story-title" className="text-sm font-semibold text-slate-300">Story Title</label>
                 <input
+                  id="story-title"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -83,8 +100,9 @@ export const CreateStoryModal = ({ onClose, onCreate }: CreateStoryModalProps) =
 
               {/* Tagline */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-300">Tagline <span className="text-slate-500">(optional)</span></label>
+                <label htmlFor="story-tagline" className="text-sm font-semibold text-slate-300">Tagline <span className="text-slate-500">(optional)</span></label>
                 <input
+                  id="story-tagline"
                   type="text"
                   value={tagline}
                   onChange={(e) => setTagline(e.target.value)}
@@ -95,9 +113,10 @@ export const CreateStoryModal = ({ onClose, onCreate }: CreateStoryModalProps) =
 
               {/* Story Length Slider */}
               <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-300">Story Length</label>
+                <label htmlFor="story-length" className="text-sm font-semibold text-slate-300">Story Length</label>
                 <div className="relative">
                   <input
+                    id="story-length"
                     type="range"
                     min="1"
                     max="10"
@@ -125,6 +144,9 @@ export const CreateStoryModal = ({ onClose, onCreate }: CreateStoryModalProps) =
                 </div>
                 <button
                   onClick={() => setAiAssist(!aiAssist)}
+                  role="switch"
+                  aria-checked={aiAssist}
+                  aria-label="Enable AI Story Assistant"
                   className={`relative w-12 h-6 rounded-full transition-colors ${
                     aiAssist ? 'bg-orange-500' : 'bg-slate-600'
                   }`}
