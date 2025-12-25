@@ -1,8 +1,37 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+  --font-family-sans: 'Inter', system-ui, sans-serif;
+  --font-family-serif: 'Georgia', 'Playfair Display', serif;
+  
+  /* Night color palette (indigo/blue) */
+  --color-night-50: #f0f4ff;
+  --color-night-100: #e0e9ff;
+  --color-night-200: #c7d7fe;
+  --color-night-300: #a4b8fc;
+  --color-night-400: #8193f8;
+  --color-night-500: #6370f2;
+  --color-night-600: #4f4ee8;
+  --color-night-700: #3d3bd4;
+  --color-night-800: #2e2fb3;
+  --color-night-900: #2a2a8f;
+  --color-night-950: #1a1a52;
+  
+  /* Ember color palette (amber/peach) */
+  --color-ember-50: #fff7ed;
+  --color-ember-100: #ffedd5;
+  --color-ember-200: #fed7aa;
+  --color-ember-300: #fdba74;
+  --color-ember-400: #fb923c;
+  --color-ember-500: #f97316;
+  --color-ember-600: #ea580c;
+  --color-ember-700: #c2410c;
+  --color-ember-800: #9a3412;
+  --color-ember-900: #7c2d12;
+}
 
 /* Cozy Bedtime Story Theme - Warm & Gentle */
 :root {
