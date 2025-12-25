@@ -58,26 +58,27 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-[100] overflow-hidden flex items-center justify-center">
-      {/* Background */}
+    <div className="fixed inset-0 bg-night-950 z-[100] overflow-hidden flex items-center justify-center">
+      {/* Background - Dimmed for bedtime */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-black to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-night-950 via-night-900 to-night-950 opacity-95" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(79,78,232,0.1),transparent_70%)]" />
       </div>
 
       {/* Top Controls */}
       <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-10">
         <button 
           onClick={onBack} 
-          className="w-12 h-12 bg-slate-800/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-slate-700 hover:bg-slate-700 active:scale-95 transition-all"
+          className="w-12 h-12 glass-warm rounded-full flex items-center justify-center text-white border border-white/15 hover:bg-white/10 active:scale-95 transition-all"
         >
           <X size={24}/>
         </button>
-        <div className="text-slate-400 text-sm font-semibold">WATCH MODE</div>
+        <div className="text-ember-300 text-sm font-semibold">BEDTIME MODE</div>
       </div>
 
       {/* Story Card */}
       <div className="relative max-w-md w-full mx-auto px-6">
-        <div className="bg-slate-800 rounded-3xl overflow-hidden shadow-2xl border border-slate-700">
+        <div className="glass-warm rounded-3xl overflow-hidden shadow-2xl border border-white/15">
           {/* Story Image */}
           <div className="relative h-96">
             <img 
@@ -89,7 +90,7 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
             
             {/* NOW PLAYING Badge */}
             <div className="absolute top-4 left-1/2 -translate-x-1/2">
-              <div className="bg-orange-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+              <div className="bg-ember-400/90 backdrop-blur-sm text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-2 border border-ember-300/30">
                 {playing && <div className="w-2 h-2 bg-white rounded-full animate-pulse" />}
                 NOW PLAYING
               </div>
@@ -102,13 +103,13 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
               
               {/* Progress Bar */}
               <div className="space-y-1">
-                <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-orange-500 rounded-full transition-all duration-1000"
+                    className="h-full bg-ember-400 rounded-full transition-all duration-1000"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <div className="flex justify-between text-xs text-slate-400">
+                <div className="flex justify-between text-xs text-slate-300">
                   <span>{formatTime(currentTime)}</span>
                   <span>{formatTime(totalDuration)}</span>
                 </div>
@@ -121,14 +122,14 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
             <button 
               onClick={handlePrevious}
               disabled={imgs.length <= 1}
-              className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center text-slate-300 hover:bg-slate-600 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="w-12 h-12 glass-warm rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed border border-white/10"
             >
               <SkipBack size={20} fill="currentColor" />
             </button>
             
             <button 
               onClick={() => setPlaying(!playing)} 
-              className="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-orange-500/50 hover:shadow-2xl hover:scale-105 active:scale-95 transition-all"
+              className="w-20 h-20 bg-gradient-to-br from-ember-400 to-ember-500 rounded-full flex items-center justify-center text-white shadow-xl shadow-ember-500/40 hover:shadow-2xl hover:scale-105 active:scale-95 transition-all border border-ember-300/30"
             >
               {playing ? (
                 <Pause size={32} fill="currentColor" />
@@ -140,7 +141,7 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
             <button 
               onClick={handleNext}
               disabled={imgs.length <= 1}
-              className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center text-slate-300 hover:bg-slate-600 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="w-12 h-12 glass-warm rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed border border-white/10"
             >
               <SkipForward size={20} fill="currentColor" />
             </button>
@@ -149,7 +150,7 @@ export const ReaderView = ({ story, onBack }: ReaderViewProps) => {
 
         {/* Swipe Hint */}
         <div className="mt-6 text-center">
-          <div className="text-slate-500 text-sm flex items-center justify-center gap-2">
+          <div className="text-slate-400 text-sm flex items-center justify-center gap-2">
             Swipe for next story
             <ChevronDown size={16} />
           </div>

@@ -39,7 +39,7 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
     <div className="space-y-6 pb-24">
       {/* Campfire Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 shadow-2xl shadow-orange-500/50 mb-2">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 shadow-2xl shadow-ember-500/40 mb-2">
           <Flame size={40} className="text-white" />
         </div>
         <h2 className="text-3xl font-bold text-white">Your Circles</h2>
@@ -54,7 +54,7 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
           onClick={onCreateCircle}
           className="card-dark rounded-2xl p-6 flex flex-col items-center gap-3 hover:-translate-y-1 transition-all border-2 border-dashed border-slate-600 hover:border-orange-500"
         >
-          <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-ember-400 rounded-full flex items-center justify-center">
             <Plus size={24} className="text-white" />
           </div>
           <span className="font-semibold text-white">Create Circle</span>
@@ -64,7 +64,7 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
           onClick={onJoinCircle}
           className="card-dark rounded-2xl p-6 flex flex-col items-center gap-3 hover:-translate-y-1 transition-all border-2 border-dashed border-slate-600 hover:border-orange-500"
         >
-          <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-ember-400 rounded-full flex items-center justify-center">
             <Hash size={24} className="text-white" />
           </div>
           <span className="font-semibold text-white">Join by Code</span>
@@ -73,9 +73,9 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
 
       {/* Circles List */}
       {circles.length === 0 ? (
-        <div className="glass-dark rounded-2xl p-12 text-center border border-slate-700">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-orange-500/20 to-orange-600/20 border-4 border-orange-500/30 mx-auto mb-6">
-            <Flame size={48} className="text-orange-400" />
+        <div className="glass-warm rounded-2xl p-12 text-center border border-white/10">
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-ember-400/20 to-ember-500/20 border-4 border-ember-400/30 mx-auto mb-6">
+            <Flame size={48} className="text-ember-400" />
           </div>
           <h3 className="text-2xl font-bold text-white mb-3">No campfires yet</h3>
           <p className="text-sm text-slate-400 max-w-md mx-auto mb-6">
@@ -105,7 +105,7 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
               <div className="p-6 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center shadow-lg shadow-orange-500/30 border-2 border-orange-300">
+                    <div className="w-14 h-14 bg-gradient-to-br from-ember-400 to-ember-500 rounded-full flex items-center justify-center shadow-lg shadow-ember-500/30 border-2 border-ember-300">
                       <Flame size={24} className="text-white" />
                     </div>
                     <div>
@@ -127,10 +127,10 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
                         key={idx}
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm ${
                           member.role === 'parent' 
-                            ? 'bg-gradient-to-br from-orange-400 to-orange-600' 
+                            ? 'bg-gradient-to-br from-ember-400 to-ember-500' 
                             : member.role === 'kid'
-                            ? 'bg-gradient-to-br from-blue-400 to-blue-600'
-                            : 'bg-gradient-to-br from-purple-400 to-purple-600'
+                            ? 'bg-gradient-to-br from-night-400 to-night-500'
+                            : 'bg-gradient-to-br from-ember-300 to-ember-400'
                         }`}
                         title={`${member.name} (${member.role})`}
                       >
@@ -146,8 +146,8 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
                     onClick={() => setActiveTab('stories')}
                     className={`px-4 py-2 font-semibold text-sm transition-all ${
                       activeTab === 'stories'
-                        ? 'text-orange-400 border-b-2 border-orange-400'
-                        : 'text-slate-500 hover:text-slate-300'
+                        ? 'text-ember-400 border-b-2 border-ember-400'
+                        : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
                     Stories
@@ -156,8 +156,8 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
                     onClick={() => setActiveTab('gifts')}
                     className={`px-4 py-2 font-semibold text-sm transition-all flex items-center gap-2 ${
                       activeTab === 'gifts'
-                        ? 'text-orange-400 border-b-2 border-orange-400'
-                        : 'text-slate-500 hover:text-slate-300'
+                        ? 'text-ember-400 border-b-2 border-ember-400'
+                        : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
                     <Gift size={16} />
@@ -167,8 +167,8 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
                     onClick={() => setActiveTab('activity')}
                     className={`px-4 py-2 font-semibold text-sm transition-all flex items-center gap-2 ${
                       activeTab === 'activity'
-                        ? 'text-orange-400 border-b-2 border-orange-400'
-                        : 'text-slate-500 hover:text-slate-300'
+                        ? 'text-ember-400 border-b-2 border-ember-400'
+                        : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
                     <Activity size={16} />
@@ -199,7 +199,7 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
                   <button className="flex-1 px-4 py-2 bg-slate-800 text-slate-300 font-semibold rounded-xl hover:bg-slate-700 active:scale-95 transition-all">
                     View Stories
                   </button>
-                  <button className="px-4 py-2 bg-orange-500/20 text-orange-400 font-semibold rounded-xl border border-orange-500/30 hover:bg-orange-500/30 active:scale-95 transition-all flex items-center gap-2">
+                  <button className="px-4 py-2 bg-ember-400/20 text-ember-400 font-semibold rounded-xl border border-ember-400/30 hover:bg-ember-400/30 active:scale-95 transition-all flex items-center gap-2 glass-warm">
                     <QrCode size={18} />
                     Invite
                   </button>
@@ -211,7 +211,7 @@ export const CirclesView = ({ onCreateCircle, onJoinCircle }: CirclesViewProps) 
       )}
 
       {/* Info Card */}
-      <div className="glass-dark rounded-2xl p-6 border border-slate-700">
+      <div className="glass-warm rounded-2xl p-6 border border-white/10">
         <h3 className="font-semibold text-white mb-2">About Circles</h3>
         <p className="text-sm text-slate-400 leading-relaxed">
           Circles are private groups where you can share stories with specific people. Perfect for families, 

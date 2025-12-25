@@ -21,10 +21,10 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
     return (
       <div className="space-y-6 pb-24">
         {/* Kids Impact Banner */}
-        <div className="glass-dark rounded-2xl p-6 border border-orange-500/20">
+        <div className="glass-warm rounded-2xl p-6 border border-ember-400/30">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center shadow-lg">
                 <Heart size={24} className="text-white fill-white" />
               </div>
               <div>
@@ -32,21 +32,21 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
                 <div className="text-2xl font-black text-white">${kidsImpactTotal.toLocaleString()}</div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-lg font-bold text-orange-400">{storiesHelping}</div>
-              <div className="text-xs text-slate-500">Stories helping</div>
-            </div>
+          <div className="text-right">
+            <div className="text-lg font-bold text-ember-400">{storiesHelping}</div>
+            <div className="text-xs text-slate-400">Stories helping</div>
           </div>
-          <div className="mt-4 h-2 bg-slate-700 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-orange-500 to-orange-600 rounded-full" style={{ width: '67%' }} />
+        </div>
+        <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-ember-400 to-ember-500 rounded-full" style={{ width: '67%' }} />
           </div>
           <div className="mt-2 text-xs text-slate-500 text-center">
             67% of creators routing earnings to children's futures
           </div>
         </div>
 
-        <div className="glass-dark rounded-2xl p-10 text-center space-y-4 border border-slate-700">
-          <div className="inline-flex items-center gap-2 bg-orange-500/20 text-orange-400 px-4 py-2 rounded-full text-xs font-bold border border-orange-500/30">
+        <div className="glass-warm rounded-2xl p-10 text-center space-y-4 border border-white/10">
+          <div className="inline-flex items-center gap-2 bg-ember-400/20 text-ember-400 px-4 py-2 rounded-full text-xs font-bold border border-ember-400/30">
             Marketplace is quiet
           </div>
           <h3 className="text-2xl font-bold text-white">No published stories yet</h3>
@@ -56,7 +56,7 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
           <div className="flex items-center justify-center">
             <button 
               onClick={onBackToLibrary} 
-              className="px-6 py-3 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 active:scale-95 transition-all"
+              className="px-6 py-3 rounded-full bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold shadow-lg shadow-ember-500/30 hover:-translate-y-0.5 active:scale-95 transition-all"
             >
               Go to Library
             </button>
@@ -90,8 +90,8 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
       {/* Category Carousels */}
       <div className="space-y-6">
         <div>
-          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Sparkles size={16} className="text-orange-400" />
+          <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <Sparkles size={16} className="text-ember-400" />
             Top Gifted
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -146,11 +146,11 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
 
       {/* Gift Modal */}
       {showGiftModal && selectedStory && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-800 rounded-3xl shadow-2xl border border-slate-700 overflow-hidden">
-            <div className="p-6 border-b border-slate-700 bg-slate-900/50">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-night-950/90 backdrop-blur-sm">
+          <div className="w-full max-w-md glass-warm rounded-3xl shadow-2xl border border-white/15 overflow-hidden">
+            <div className="p-6 border-b border-white/10 glass-warm">
               <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <Gift size={24} className="text-orange-400" />
+                <Gift size={24} className="text-ember-400" />
                 Gift This Story
               </h3>
             </div>
@@ -163,13 +163,13 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
                   onPurchase(selectedStory);
                   setShowGiftModal(false);
                 }}
-                className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 active:scale-95 transition-all"
+                className="w-full px-6 py-3 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold rounded-xl shadow-lg shadow-ember-500/30 hover:-translate-y-0.5 active:scale-95 transition-all"
               >
                 Send Gift
               </button>
               <button 
                 onClick={() => setShowGiftModal(false)}
-                className="w-full px-6 py-3 bg-slate-700 text-slate-300 font-semibold rounded-xl hover:bg-slate-600 active:scale-95 transition-all"
+                className="w-full px-6 py-3 glass-warm text-slate-300 font-semibold rounded-xl hover:bg-white/10 active:scale-95 transition-all"
               >
                 Cancel
               </button>
@@ -202,17 +202,17 @@ const MarketStoryCard = ({ story, onPurchase, onGift }: MarketStoryCardProps) =>
       </div>
       
       {/* Price Badge */}
-      <div className="absolute top-2 right-2 bg-orange-500 text-white font-bold px-3 py-1.5 rounded-full shadow-lg text-xs">
+      <div className="absolute top-2 right-2 bg-ember-400/90 backdrop-blur-sm text-white font-bold px-3 py-1.5 rounded-full shadow-lg text-xs border border-ember-300/30">
         {story.price ? `${story.price}¢` : 'Free'}
       </div>
       
       {/* Memory Count */}
-      <div className="absolute top-2 left-2 bg-slate-900/90 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded-full border border-slate-700">
+      <div className="absolute top-2 left-2 glass-warm text-white text-xs font-semibold px-2 py-1 rounded-full border border-white/15">
         ○ {story.pages?.length || 1}
       </div>
       
       {/* Category Badge */}
-      <div className="absolute bottom-2 left-2 bg-orange-600 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider">
+      <div className="absolute bottom-2 left-2 bg-ember-500/90 backdrop-blur-sm text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider border border-ember-300/30">
         {story.category || 'FAMILY'}
       </div>
     </div>
@@ -220,21 +220,21 @@ const MarketStoryCard = ({ story, onPurchase, onGift }: MarketStoryCardProps) =>
     <div className="p-3 space-y-3">
       <h3 className="font-bold text-white text-sm leading-tight line-clamp-2">{story.title}</h3>
       <div className="flex items-center gap-2">
-        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-[10px] text-white font-bold">
+        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-[10px] text-white font-bold">
           {story.author?.[0] || 'M'}
         </div>
-        <span className="text-xs text-slate-400">By {story.author}</span>
+        <span className="text-xs text-slate-300">By {story.author}</span>
       </div>
       <div className="flex gap-2">
         <button 
           onClick={() => onPurchase(story)} 
-          className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-2 text-sm rounded-xl shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 active:scale-95 transition-all"
+          className="flex-1 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold py-2 text-sm rounded-xl shadow-lg shadow-ember-500/20 hover:-translate-y-0.5 active:scale-95 transition-all"
         >
           Unlock
         </button>
         <button 
           onClick={() => onGift(story)}
-          className="px-3 py-2 bg-slate-700 text-orange-400 rounded-xl border border-orange-500/30 hover:bg-orange-500/20 active:scale-95 transition-all"
+          className="px-3 py-2 glass-warm text-ember-400 rounded-xl border border-ember-400/30 hover:bg-ember-400/20 active:scale-95 transition-all"
         >
           <Gift size={16} />
         </button>

@@ -154,7 +154,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
 
   return (
     <div className="card-dark rounded-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] pb-24">
-      <div className="w-full md:w-72 bg-slate-800 border-r border-slate-700 p-6 space-y-6">
+      <div className="w-full md:w-72 glass-warm border-r border-white/10 p-6 space-y-6">
         <div>
           <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">
             Memories Per Story (MPS)
@@ -180,11 +180,11 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             <div 
               key={i} 
               onClick={() => setActive(i)} 
-              className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                active === i 
-                  ? 'border-orange-500 bg-slate-700 shadow-sm' 
-                  : 'border-transparent bg-slate-900/50 opacity-60 hover:opacity-80'
-              }`}
+            className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
+              active === i 
+                ? 'border-ember-400 glass-warm shadow-sm' 
+                : 'border-transparent glass-warm opacity-60 hover:opacity-80'
+            }`}
             >
               <div className="text-[10px] font-bold text-slate-400">Page {i+1}</div>
               <div className="text-xs truncate text-slate-300">{p.text || "..."}</div>
@@ -197,7 +197,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               // Switch to new page immediately
               setTimeout(() => setActive(newPages.length - 1), 0);
             }} 
-            className="w-full py-2 border-2 border-dashed border-slate-600 rounded-xl text-orange-400 text-xs font-bold hover:border-orange-500 active:scale-95 transition-all"
+            className="w-full py-2 border-2 border-dashed border-white/20 rounded-xl text-ember-400 text-xs font-bold hover:border-ember-400/60 hover:bg-ember-400/10 active:scale-95 transition-all"
           >
             + Add Page
           </button>
@@ -221,8 +221,8 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
             }}
             className={`h-32 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${
               isDragging 
-                ? 'bg-orange-500/10 border-orange-500 border-solid' 
-                : 'bg-slate-800 border-slate-600 hover:bg-slate-700 hover:border-orange-500/50'
+                ? 'bg-ember-400/15 border-ember-400 border-solid glass-warm' 
+                : 'glass-warm border-white/20 hover:border-ember-400/50 hover:bg-ember-400/5'
             }`}
           >
             <input
@@ -235,20 +235,20 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               aria-hidden="true"
               tabIndex={-1}
             />
-            <UploadCloud size={24} className={isDragging ? 'text-orange-500' : 'text-slate-500'} />
-            <span className={`text-xs font-bold mt-1 ${isDragging ? 'text-orange-500' : 'text-slate-500'}`}>
+            <UploadCloud size={24} className={isDragging ? 'text-ember-400' : 'text-slate-400'} />
+            <span className={`text-xs font-bold mt-1 ${isDragging ? 'text-ember-400' : 'text-slate-400'}`}>
               {isDragging ? 'Drop photos here' : 'Drag photos here'}
             </span>
           </div>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold rounded-xl shadow-lg shadow-ember-500/20 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2"
           >
             <UploadCloud size={18} />
             Upload to Cloud Storage
           </button>
           {uploadProgress && (
-            <div className="flex items-center gap-2 text-xs text-orange-400 bg-orange-500/10 p-3 rounded-lg border border-orange-500/20">
+            <div className="flex items-center gap-2 text-xs text-ember-400 bg-ember-400/10 p-3 rounded-lg border border-ember-400/20 glass-warm">
               <Loader2 size={16} className="animate-spin" />
               <span className="font-semibold">
                 Uploading {uploadProgress.current} of {uploadProgress.total} image(s) to cloud storage...
@@ -286,7 +286,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
                   setForm({...form, pages: p});
                 }
               }}
-              className="w-full px-4 py-3 bg-gradient-to-r from-orange-500/20 to-pink-500/20 text-orange-400 font-bold rounded-xl hover:from-orange-500/30 hover:to-pink-500/30 active:scale-95 transition-all border border-orange-500/30 flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 bg-gradient-to-r from-ember-400/20 to-ember-500/20 text-ember-400 font-bold rounded-xl hover:from-ember-400/30 hover:to-ember-500/30 active:scale-95 transition-all border border-ember-400/30 flex items-center justify-center gap-2 glass-warm"
             >
               <span>✨</span>
               <span>AI Help - Add to Story</span>
@@ -304,12 +304,12 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               setForm({...form, pages: p}); 
             }} 
             onFocus={(e) => e.target.select()}
-            className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-slate-700 rounded-xl p-4 bg-slate-800 text-slate-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none placeholder:text-slate-500" 
+            className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-white/15 rounded-xl p-4 glass-warm text-slate-100 focus:ring-2 focus:ring-ember-400 focus:border-ember-400 resize-none placeholder:text-slate-400" 
             placeholder="Write your story here... or click 'AI Help' to get started!" 
             autoFocus={false}
           />
         </div>
-        <div className="flex justify-end gap-3 pt-6 border-t border-slate-700">
+        <div className="flex justify-end gap-3 pt-6 border-t border-white/10">
           <button 
             onClick={onCancel} 
             className="px-6 py-3 font-bold text-slate-400 hover:text-slate-300 active:scale-95 transition-all"
@@ -319,7 +319,7 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
           <button 
             onClick={handleSaveClick}
             disabled={isSaving}
-            className={`px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 active:scale-95 transition-all ${
+            className={`px-8 py-3 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold rounded-full shadow-lg shadow-ember-500/30 hover:-translate-y-0.5 active:scale-95 transition-all ${
               isSaving ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >

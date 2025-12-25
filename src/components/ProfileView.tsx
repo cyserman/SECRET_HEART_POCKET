@@ -25,7 +25,7 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
       {/* Profile Header */}
       <div className="glass-dark rounded-3xl p-6 border border-slate-700">
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-3xl text-white font-bold shadow-xl shadow-orange-500/30 border-4 border-orange-300">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-3xl text-white font-bold shadow-xl shadow-ember-500/30 border-4 border-ember-300">
             D
           </div>
           <div className="flex-1">
@@ -36,8 +36,8 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
               )}
             </h2>
             <div className="flex items-center gap-2 mt-1">
-              <div className="text-sm text-orange-400 font-semibold">Level {level}</div>
-              <div className="text-xs text-slate-500">• Dad's Legacy</div>
+              <div className="text-sm text-ember-400 font-semibold">Level {level}</div>
+              <div className="text-xs text-slate-400">• Dad's Legacy</div>
             </div>
           </div>
         </div>
@@ -45,19 +45,19 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
 
       {/* Stats Cards */}
       <div className="grid grid-cols-4 gap-3">
-        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
+        <div className="card-dark rounded-2xl p-4 text-center border border-white/10 hover:border-ember-400/30 transition-all">
           <div className="text-3xl font-bold text-white">{storiesCreated}</div>
           <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Created</div>
         </div>
-        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
+        <div className="card-dark rounded-2xl p-4 text-center border border-white/10 hover:border-ember-400/30 transition-all">
           <div className="text-3xl font-bold text-white">{storiesOwned}</div>
           <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Owned</div>
         </div>
-        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
+        <div className="card-dark rounded-2xl p-4 text-center border border-white/10 hover:border-ember-400/30 transition-all">
           <div className="text-3xl font-bold text-white">{helpedCount}</div>
           <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Helped</div>
         </div>
-        <div className="card-dark rounded-2xl p-4 text-center border border-slate-700 hover:border-orange-500/30 transition-all">
+        <div className="card-dark rounded-2xl p-4 text-center border border-white/10 hover:border-ember-400/30 transition-all">
           <div className="text-3xl font-bold text-white">{circlesCount}</div>
           <div className="text-xs text-slate-400 uppercase tracking-wide mt-1">Circles</div>
         </div>
@@ -74,7 +74,7 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
             <div className="inline-block bg-slate-800 rounded-xl px-4 py-2 border border-slate-700">
               <div className="text-xs text-slate-500 mb-1">Story of the Day</div>
               <div className="text-sm font-bold text-white">The Sleepy Moon</div>
-              <button className="mt-2 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center mx-auto shadow-lg">
+              <button className="mt-2 w-10 h-10 rounded-full bg-ember-400 text-white flex items-center justify-center mx-auto shadow-lg">
                 ▶
               </button>
             </div>
@@ -88,14 +88,14 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
       {/* Legacy Vault Card */}
       <div className="card-dark rounded-2xl p-6 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-ember-400 to-ember-500 rounded-full flex items-center justify-center">
             <Lock size={24} className="text-white" />
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               Legacy Vault
               {userData.isGoldMember && (
-                <Award size={18} className="text-orange-400 fill-orange-400" />
+                <Award size={18} className="text-ember-400 fill-ember-400" />
               )}
             </h3>
             <p className="text-sm text-slate-400">
@@ -108,7 +108,7 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
         {!userData.isGoldMember && (
           <button 
             onClick={onShowLegacyModal}
-            className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:-translate-y-0.5 active:scale-95 transition-all"
+            className="w-full px-6 py-3 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold rounded-xl shadow-lg shadow-ember-500/20 hover:-translate-y-0.5 active:scale-95 transition-all"
           >
             Unlock Legacy
           </button>
@@ -128,8 +128,8 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
             >
               <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
                 badge.unlocked 
-                  ? 'bg-gradient-to-br from-orange-500 to-orange-600 border-2 border-orange-400' 
-                  : 'bg-slate-700 border-2 border-slate-600'
+                  ? 'bg-gradient-to-br from-ember-400 to-ember-500 border-2 border-ember-300' 
+                  : 'glass-warm border-2 border-white/15'
               }`}>
                 <badge.icon size={28} className="text-white" />
               </div>
@@ -145,13 +145,13 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
       <div className="card-dark rounded-2xl p-6 space-y-4">
         <h3 className="text-lg font-bold text-white">Account</h3>
         <div className="space-y-3">
-          <button className="w-full px-4 py-3 bg-slate-800 text-slate-300 font-semibold rounded-xl text-left hover:bg-slate-700 transition-all">
+          <button className="w-full px-4 py-3 glass-warm text-slate-200 font-semibold rounded-xl text-left hover:bg-white/10 transition-all">
             Privacy Settings
           </button>
-          <button className="w-full px-4 py-3 bg-slate-800 text-slate-300 font-semibold rounded-xl text-left hover:bg-slate-700 transition-all">
+          <button className="w-full px-4 py-3 glass-warm text-slate-200 font-semibold rounded-xl text-left hover:bg-white/10 transition-all">
             Notification Preferences
           </button>
-          <button className="w-full px-4 py-3 bg-slate-800 text-slate-300 font-semibold rounded-xl text-left hover:bg-slate-700 transition-all">
+          <button className="w-full px-4 py-3 glass-warm text-slate-200 font-semibold rounded-xl text-left hover:bg-white/10 transition-all">
             Data & Storage
           </button>
         </div>

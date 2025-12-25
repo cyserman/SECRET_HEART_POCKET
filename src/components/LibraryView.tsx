@@ -36,12 +36,12 @@ export const LibraryView = ({
   return (
     <div className="space-y-6 pb-24">
       {/* Kids Future Fund Banner */}
-      <div className="glass-dark p-4 rounded-2xl flex items-center justify-between border border-orange-500/20">
+      <div className="glass-warm p-4 rounded-2xl flex items-center justify-between border border-ember-400/30">
         <div className="flex items-center gap-3">
-          <Rocket size={20} className="text-orange-400" />
-          <span className="text-sm font-semibold text-slate-300">Kids Future Fund</span>
+          <Rocket size={20} className="text-ember-300" />
+          <span className="text-sm font-semibold text-slate-200">Kids Future Fund</span>
         </div>
-        <div className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 rounded-full shadow-lg shadow-orange-500/30">
+        <div className="flex items-center gap-2 bg-gradient-to-r from-ember-400 to-ember-500 px-4 py-2 rounded-full shadow-lg shadow-ember-500/30">
           <DollarSign size={16} className="text-white" />
           <span className="text-white font-bold">${kidsFundRaised.toLocaleString()} Raised</span>
         </div>
@@ -55,8 +55,8 @@ export const LibraryView = ({
             onClick={() => setActiveCategory(category)}
             className={`px-5 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all active:scale-95 ${
               activeCategory === category
-                ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
-                : 'bg-slate-800 text-slate-400 hover:bg-slate-700 border border-slate-700'
+                ? 'bg-ember-400 text-white shadow-lg shadow-ember-500/30'
+                : 'glass-warm text-slate-300 hover:text-white border border-white/10'
             }`}
           >
             {category}
@@ -66,19 +66,19 @@ export const LibraryView = ({
 
       {/* Legacy Lock CTA */}
       {!userData.isGoldMember && (
-        <div className="bg-gradient-to-r from-orange-500 to-pink-600 p-6 rounded-2xl text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-ember-400/90 via-ember-500/90 to-ember-600/90 p-6 rounded-2xl text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-sm border border-ember-300/20">
           <div className="flex items-center gap-4">
-            <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+            <div className="bg-white/25 p-3 rounded-full backdrop-blur-sm">
               <Award size={28} />
             </div>
             <div>
               <h3 className="text-lg font-bold">Unlock Legacy Mode</h3>
-              <p className="text-sm opacity-90">Verify a child's bank account to get Gold features.</p>
+              <p className="text-sm opacity-95">Verify a child's bank account to get Gold features.</p>
             </div>
           </div>
           <button 
             onClick={onShowLegacyModal} 
-            className="bg-white text-orange-600 px-6 py-3 rounded-full font-bold text-sm active:scale-95 hover:shadow-xl transition-all shadow-lg"
+            className="bg-white text-ember-600 px-6 py-3 rounded-full font-bold text-sm active:scale-95 hover:shadow-xl transition-all shadow-lg"
           >
             Activate Now
           </button>
@@ -102,7 +102,7 @@ export const LibraryView = ({
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
             
             {/* Category Badge */}
-            <div className="absolute top-3 left-3 bg-orange-600 text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-md tracking-wider shadow-lg">
+            <div className="absolute top-3 left-3 bg-ember-500/90 backdrop-blur-sm text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-md tracking-wider shadow-lg border border-ember-300/30">
               {heroStory.category || 'FAMILY'}
             </div>
             
@@ -118,10 +118,10 @@ export const LibraryView = ({
                 <p className="text-slate-300 text-sm mb-3">{heroStory.tagline}</p>
               )}
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-xs text-white font-bold shadow-lg">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-xs text-white font-bold shadow-lg">
                   {heroStory.author?.[0] || 'D'}
                 </div>
-                <span className="text-slate-400 text-xs font-medium">Narrated by {heroStory.author || 'Dad'}</span>
+                <span className="text-slate-300 text-xs font-medium">Narrated by {heroStory.author || 'Dad'}</span>
               </div>
             </div>
           </div>
@@ -146,13 +146,13 @@ export const LibraryView = ({
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button 
                 onClick={onCreateStory} 
-                className="px-6 py-3 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
+                className="px-6 py-3 rounded-full bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold shadow-lg shadow-ember-500/30 hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
               >
                 Create Your First Story
               </button>
               <button 
                 onClick={onBrowseMarket} 
-                className="px-6 py-3 rounded-full bg-slate-800 text-slate-300 font-bold border border-slate-700 hover:border-slate-600 hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
+                className="px-6 py-3 rounded-full glass-warm text-slate-200 font-bold border border-white/15 hover:border-ember-400/30 hover:-translate-y-0.5 active:scale-95 hover:shadow-xl transition-all"
               >
                 Browse the Market
               </button>
@@ -234,14 +234,14 @@ const StoryCard = ({ story, onRead, onEdit, compact }: StoryCardProps) => (
       
       {/* Category Badge - Top Left */}
       <div className="absolute top-2 left-2">
-        <div className="bg-orange-600 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider shadow-lg">
+        <div className="bg-ember-500/90 backdrop-blur-sm text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider shadow-lg border border-ember-300/30">
           {story.category || 'FAMILY'}
         </div>
       </div>
 
       {/* Price Badge (if has price) */}
       {story.price && (
-        <div className="absolute bottom-2 right-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+        <div className="absolute bottom-2 right-2 bg-ember-400/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg border border-ember-300/30">
           {story.price} ¢
         </div>
       )}
@@ -259,17 +259,17 @@ const StoryCard = ({ story, onRead, onEdit, compact }: StoryCardProps) => (
       {/* Author & Actions */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-1.5">
-          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-[10px] text-white font-bold shadow-sm">
+          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-[10px] text-white font-bold shadow-sm">
             {story.author?.[0] || 'D'}
           </div>
-          <span className="text-xs text-slate-500 font-medium">{story.author || 'Dad'}</span>
+          <span className="text-xs text-slate-400 font-medium">{story.author || 'Dad'}</span>
         </div>
         <button 
           onClick={(e) => { 
             e.stopPropagation(); 
             onEdit(story); 
           }} 
-          className="p-1.5 bg-slate-800 rounded-full hover:bg-orange-500 hover:text-white active:scale-95 transition-all text-orange-400 border border-orange-500/30"
+          className="p-1.5 glass-warm rounded-full hover:bg-ember-400 hover:text-white active:scale-95 transition-all text-ember-400 border border-ember-400/30"
         >
           <DollarSign size={12}/>
         </button>
