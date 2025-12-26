@@ -36,8 +36,7 @@ jobs:
       
       - name: Run linter
         id: lint
-        run: |
-          npm run lint || echo "::warning::Linting found issues"
+        run: npm run lint
         continue-on-error: true
       
       - name: PR Info
