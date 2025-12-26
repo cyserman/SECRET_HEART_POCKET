@@ -8,6 +8,9 @@ admin.initializeApp();
 const db = admin.firestore();
 const storage = admin.storage();
 
+// App ID constant - should match client-side getAppId()
+const APP_ID = process.env.APP_ID || 'secret-heart-pocket';
+
 /**
  * generatePublicVariant
  * 
@@ -32,11 +35,56 @@ export const generatePublicVariant = functions.https.onCall(async (data, context
   }
 
   const { storyId, originalPath } = data;
+  const userId = context.auth.uid;
 
   if (!storyId || !originalPath) {
     throw new functions.https.HttpsError(
       'invalid-argument',
       'storyId and originalPath are required'
+    );
+  }
+
+  // SECURITY: Verify the path belongs to the authenticated user
+  // Path format: private/stories/{storyId}/{userId}/{timestamp}-{randomId}.jpg
+  const expectedPathPrefix = `private/stories/${storyId}/${userId}/`;
+  if (!originalPath.startsWith(expectedPathPrefix)) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'Original path does not belong to authenticated user'
+    );
+  }
+
+  // SECURITY: Verify the story belongs to the authenticated user
+  // This prevents path traversal attacks even if userId matches
+  try {
+    const storyRef = db.collection('artifacts').doc(APP_ID)
+      .collection('public').doc('data')
+      .collection('stories').doc(storyId);
+    const storyDoc = await storyRef.get();
+
+    if (!storyDoc.exists) {
+      throw new functions.https.HttpsError(
+        'not-found',
+        'Story not found'
+      );
+    }
+
+    const storyData = storyDoc.data();
+    if (storyData?.userId !== userId) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        'Story does not belong to authenticated user'
+      );
+    }
+  } catch (error) {
+    // If it's already an HttpsError, re-throw it
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+    // Otherwise, wrap it
+    throw new functions.https.HttpsError(
+      'internal',
+      `Failed to verify story ownership: ${error instanceof Error ? error.message : String(error)}`
     );
   }
 
@@ -82,9 +130,10 @@ export const generatePublicVariant = functions.https.onCall(async (data, context
     };
   } catch (error) {
     console.error('Error generating public variant:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     throw new functions.https.HttpsError(
       'internal',
-      `Failed to generate public variant: ${error}`
+      `Failed to generate public variant: ${errorMessage}`
     );
   }
 });
@@ -228,9 +277,10 @@ export const purchaseStory = functions.https.onCall(async (data, context) => {
     return result;
   } catch (error) {
     console.error('Error processing purchase:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     throw new functions.https.HttpsError(
       'internal',
-      `Failed to process purchase: ${error}`
+      `Failed to process purchase: ${errorMessage}`
     );
   }
 });
