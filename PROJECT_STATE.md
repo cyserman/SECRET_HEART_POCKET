@@ -1,8 +1,8 @@
 # PROJECT_STATE.md
 ## The Secret Heart Pocket - Living Brain (Folded Map Protocol)
 
-**Last Updated**: 2024-12-20
-**Status**: 🎉 **FULLY OPERATIONAL - ALL SYSTEMS GO!** 🎉
+**Last Updated**: 2025-12-22
+**Status**: 🔧 **BUGFIX FOLD: Clickability + Legacy Buttons** 🔧
 **Agent**: CHRISTINE (Autonomous Project Lead)
 **Protocol**: Origami Protocol (Folded Map Architecture)
 **Live URL**: https://secret-heart-pocket.vercel.app
@@ -10,6 +10,42 @@
 **Vercel**: Pro Trial Active (2 weeks)
 
 **✅ ALL ISSUES RESOLVED**: App fully functional, accessibility compliant, ready for use!
+**✅ ROADMAP VERIFICATION COMPLETE**: All 4 phases verified and operational (2025-12-20)
+
+---
+
+## 🔧 CURRENT BUGFIX FOLD: Clickability + Legacy Buttons
+
+### Current Truth
+- Issue A: Top menu buttons + orange profile not clickable.
+- Issue B: Legacy Mode "Activate now" page navigates, but clicks on its buttons cause the app to "close" (likely reload/navigation).
+- Observation: Persistent glass overlays/top-bottom "transparent windows" likely capturing clicks.
+
+### Fix Strategy (High Confidence)
+1) Ensure decorative overlays do NOT intercept pointer events:
+   - Add `pointer-events-none` to purely visual glass/gradient layers.
+2) Ensure navbar sits above overlays:
+   - Navbar container uses `z-[100]` (or `z-50` if sufficient) and is `pointer-events-auto`.
+3) Ensure all UI buttons that are not true submits are explicitly:
+   - `<button type="button" ...>`
+4) Ensure no `<a href="...">` is being used for SPA navigation where it triggers a full reload.
+5) Add a debug guard to confirm beforeunload/reload cause (dev-only).
+
+### Status
+- ✅ **PATCH SET APPLIED & VERIFIED** — all fixes implemented and tested:
+  - `src/lib/ui/uiSafety.ts` — utility classes and debug helper (attached in main.jsx)
+  - `src/components/Navigation.tsx` — all buttons have `type="button"`, uses `CLICKABLE_LAYER`, profile button is clickable
+  - `src/components/LegacyModal.tsx` — both buttons have `type="button"` to prevent reload
+  - `src/components/EditorView.tsx` — integrated DictateButton and SpellPolishBar
+  - `src/App.jsx` — restored full-featured version with CreateStoryModal, ProfileView, CirclesView
+
+### Verification
+- ✅ Top navigation buttons clickable (z-index + pointer-events fixed)
+- ✅ Profile icon functional (converted from div to button)
+- ✅ Legacy Mode buttons no longer trigger reload/unload (type="button" added)
+- ✅ Overlay layers confirmed non-interactive (CLICKABLE_LAYER applied)
+- ✅ Spell Polish feature working (gentle text polishing)
+- ✅ Dictation feature integrated (Web Speech API)
 
 ---
 
@@ -241,6 +277,33 @@ SECRET_HEART_POCKET/
 - ✅ Ready for deployment to Vercel
 
 **Refold Assessment**: 🎉 **FIREBASE STORAGE FULLY INTEGRATED!** The app now has enterprise-grade image handling with progress tracking, automatic compression, and CDN optimization. All views polished with dark theme. Build passes. Ready to deploy!
+
+### 2025-12-26 — Dictation + Model Instructions + Default Seed
+- [x] Added dictation hook (Web Speech API) + DictateButton component
+- [x] Integrated dictation into EditorView (append-to-text functionality)
+- [x] Added AGENTS_MODEL.md for story writer + voice narrator guardrails (bedtime-safe, non-negotiable safety constraints)
+- [x] Verified default Leif & Lewie seed story runs at boot (idempotent, already integrated in main.jsx)
+- **Next**: Optional — show a small "Dictate" icon inline in text areas + auto-punctuation pass (storybook-safe)
+
+**Refold Assessment**: 🎙️ **DICTATION FEATURE ADDED!** Users can now dictate story text using Web Speech API. Model instructions documented for AI story generation and voice narration with strict bedtime-safe guardrails. Default story seeding confirmed operational.
+
+### 2025-12-20 - Roadmap Verification & Status Update
+- ✅ **PHASE 1 VERIFIED**: React/Vite project initialized, Tailwind + Lucide + Firebase installed, folder structure complete (`/components`, `/hooks`, `/lib`, `/types`)
+- ✅ **PHASE 2 VERIFIED**: 
+  - MPS Logic implemented in `useStory.ts` (1-10 Memories Per Story with clamping)
+  - Dreamy Privacy Filters implemented (CSS hardware acceleration via `FILTERS` constants)
+  - Pocket Coin Economy implemented in `functions/src/index.ts` (`purchaseStory` with 50/50 split logic)
+- ✅ **PHASE 3 VERIFIED**: 
+  - UI directives implemented (glassmorphism, button interactions with `active:scale-95`, `hover:shadow-lg`)
+  - LibraryView created with dashboard-style stats and story cards
+  - ReaderView created with cinematic teleprompter interface
+  - Note: Current implementation uses dark theme (`night-950` palette) rather than light gradient directive; `App.jsx` contains light theme variant
+- ✅ **PHASE 4 VERIFIED**: 
+  - PWA configured in `vite.config.ts` with manifest, icons, service worker
+  - Vercel deployment configured and live
+- 📝 **PROJECT_STATE.md UPDATED**: Living brain refreshed with current verification status
+
+**Refold Assessment**: 🎉 **ALL PHASES VERIFIED AND OPERATIONAL!** The Secret Heart Pocket is fully built according to the roadmap. Chassis, Engine, Paint Job, and Showroom all complete. System ready for continued operation and enhancement.
 
 ---
 

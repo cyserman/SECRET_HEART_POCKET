@@ -3,6 +3,8 @@ import { UploadCloud, Loader2 } from 'lucide-react';
 import { Story } from '../types';
 import { uploadImage } from '../lib/storage';
 import { useAuth } from '../hooks/useAuth';
+import DictateButton from './DictateButton';
+import SpellPolishBar from './SpellPolishBar';
 
 interface EditorViewProps {
   initialData?: Story | null;
@@ -304,9 +306,37 @@ export const EditorView = ({ initialData, onSave, onCancel }: EditorViewProps) =
               setForm({...form, pages: p}); 
             }} 
             onFocus={(e) => e.target.select()}
+            spellCheck={true}
+            autoCorrect="on"
+            autoCapitalize="sentences"
             className="w-full h-48 text-xl font-serif leading-relaxed border-2 border-white/15 rounded-xl p-4 glass-warm text-slate-100 focus:ring-2 focus:ring-ember-400 focus:border-ember-400 resize-none placeholder:text-slate-400" 
             placeholder="Write your story here... or click 'AI Help' to get started!" 
             autoFocus={false}
+          />
+          <SpellPolishBar
+            value={form.pages[active]?.text || ''}
+            onChange={(next) => {
+              let p = [...form.pages];
+              if (!p[active]) {
+                p[active] = { text: "", images: [] };
+              }
+              p[active].text = next;
+              setForm({...form, pages: p});
+            }}
+            label="Polish page"
+          />
+          <DictateButton
+            className="mt-3"
+            onAppend={(spoken) => {
+              let p = [...form.pages];
+              if (!p[active]) {
+                p[active] = { text: "", images: [] };
+              }
+              const current = p[active].text || '';
+              const next = (current ? current + "\n\n" : "") + spoken;
+              p[active].text = next;
+              setForm({...form, pages: p});
+            }}
           />
         </div>
         <div className="flex justify-end gap-3 pt-6 border-t border-white/10">

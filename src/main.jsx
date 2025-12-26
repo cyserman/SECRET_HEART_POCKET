@@ -4,9 +4,13 @@ import App from './App.jsx'
 import './index.css'
 import { initAuth } from './lib/authBootstrap'
 import { seedDefaultHeartPocketStory } from './lib/seedDefaultStories'
+import { attachUnloadDebug } from './lib/ui/uiSafety'
 
 async function boot() {
   try {
+    // Attach unload debug helper (dev-only)
+    attachUnloadDebug();
+    
     // Initialize anonymous authentication
     await initAuth();
     

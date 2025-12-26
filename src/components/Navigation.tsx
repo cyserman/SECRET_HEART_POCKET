@@ -1,18 +1,20 @@
 import { Heart, Home, Users, ShoppingBag, User, Flame, Coins } from 'lucide-react';
 import { UserData } from '../types';
+import { CLICKABLE_LAYER } from '../lib/ui/uiSafety';
 
 interface NavigationProps {
   view: string;
   userData: UserData;
   onViewChange: (view: any) => void;
   onCreateStory?: () => void;
+  onProfileClick?: () => void;
 }
 
-export const Navigation = ({ view, userData, onViewChange, onCreateStory }: NavigationProps) => {
+export const Navigation = ({ view, userData, onViewChange, onCreateStory, onProfileClick }: NavigationProps) => {
   return (
     <>
       {/* Top Header */}
-      <header className="sticky top-0 z-40 glass-warm px-6 py-4 flex justify-between items-center border-b border-white/10">
+      <header className={["sticky top-0 z-[100] glass-warm px-6 py-4 flex justify-between items-center border-b border-white/10", CLICKABLE_LAYER].join(" ")}>
         <div className="flex items-center gap-3">
           <div className="relative">
             <Heart size={28} className="text-ember-400 fill-ember-400 drop-shadow-lg animate-ember" />
@@ -33,16 +35,22 @@ export const Navigation = ({ view, userData, onViewChange, onCreateStory }: Navi
             <Coins size={16} className="text-ember-400" />
             <span className="text-ember-400 font-bold text-sm tabular-nums">{userData.balance}</span>
           </div>
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center ring-2 ring-ember-400/30 ring-offset-2 ring-offset-night-950 shadow-lg">
+          <button
+            type="button"
+            onClick={onProfileClick || (() => onViewChange('profile'))}
+            className="w-9 h-9 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center ring-2 ring-ember-400/30 ring-offset-2 ring-offset-night-950 shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            aria-label="Open profile"
+          >
             <User size={18} className="text-white" />
-          </div>
+          </button>
         </div>
       </header>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-warm border-t border-white/10">
+      <nav className={["fixed bottom-0 left-0 right-0 z-[100] glass-warm border-t border-white/10", CLICKABLE_LAYER].join(" ")}>
         <div className="max-w-6xl mx-auto flex justify-around items-center py-3">
           <button
+            type="button"
             onClick={() => onViewChange('library')}
             className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
               view === 'library' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
@@ -56,6 +64,7 @@ export const Navigation = ({ view, userData, onViewChange, onCreateStory }: Navi
           </button>
           
           <button
+            type="button"
             onClick={() => onViewChange('circles')}
             className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
               view === 'circles' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
@@ -69,6 +78,7 @@ export const Navigation = ({ view, userData, onViewChange, onCreateStory }: Navi
           </button>
           
           <button
+            type="button"
             onClick={() => onViewChange('market')}
             className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
               view === 'market' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
@@ -82,6 +92,7 @@ export const Navigation = ({ view, userData, onViewChange, onCreateStory }: Navi
           </button>
           
           <button
+            type="button"
             onClick={() => onViewChange('profile')}
             className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
               view === 'profile' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
@@ -97,7 +108,8 @@ export const Navigation = ({ view, userData, onViewChange, onCreateStory }: Navi
         
         {/* FAB (Floating Action Button) */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-8">
-          <button 
+          <button
+            type="button"
             onClick={onCreateStory}
             className="w-16 h-16 bg-gradient-to-br from-ember-400 via-ember-500 to-ember-600 rounded-full shadow-2xl shadow-ember-500/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all ring-4 ring-night-950/50 hover:shadow-ember-500/60 group"
           >

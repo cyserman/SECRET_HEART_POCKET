@@ -24,13 +24,15 @@ export const LegacyModal = ({ onActivate, onClose }: LegacyModalProps) => {
             <div className="flex-1 text-sm font-bold text-slate-200">Upload Photo of Bank Book</div>
           </div>
         </div>
-        <button 
+        <button
+          type="button"
           onClick={onActivate} 
           className="w-full bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-ember-500/30 hover:shadow-xl active:scale-95 transition-all"
         >
           Verify & Unlock Gold
         </button>
-        <button 
+        <button
+          type="button"
           onClick={onClose} 
           className="w-full mt-2 text-slate-400 text-sm font-bold active:scale-95 hover:text-slate-300 transition-all"
         >

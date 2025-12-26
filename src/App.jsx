@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Heart } from 'lucide-react';
 import { doc, updateDoc, addDoc, collection, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db, getAppId } from './lib/firebase';
 import { useAuth } from './hooks/useAuth';
@@ -9,7 +10,10 @@ import { LibraryView } from './components/LibraryView';
 import { MarketView } from './components/MarketView';
 import { EditorView } from './components/EditorView';
 import { ReaderView } from './components/ReaderView';
+import { ProfileView } from './components/ProfileView';
+import { CirclesView } from './components/CirclesView';
 import { LegacyModal } from './components/LegacyModal';
+import { CreateStoryModal } from './components/CreateStoryModal';
 
 export default function App() {
   const [error, setError] = useState(null);
@@ -45,13 +49,14 @@ export default function App() {
   }, []);
 
   // Hooks must be called unconditionally
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, error: authError } = useAuth();
   const { userData, loading: userLoading } = useUserData(user);
   const { stories, marketStories, loading: storiesLoading } = useStory(user, userData);
   
   const [view, setView] = useState('library');
   const [currentStory, setCurrentStory] = useState(null);
   const [showLegacyModal, setShowLegacyModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const loading = authLoading || userLoading || storiesLoading;
 
@@ -104,92 +109,113 @@ export default function App() {
   }
 
   const handleLegacyActivate = async () => {
-    if (!user || !db) return;
-    
+    if (!user || !db) {
+      alert('Please wait a moment for sign-in to finish, then try again.');
+      return;
+    }
+
     const appId = getAppId();
     const userRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
-    await updateDoc(userRef, { 
+    await setDoc(userRef, { 
       isGoldMember: true, 
       legacyVerified: true 
-    });
+    }, { merge: true });
     setShowLegacyModal(false);
+    alert('Legacy Mode unlocked for this session.');
+  };
+
+  const handleCreateStory = (data) => {
+    setCurrentStory({
+      title: data.title,
+      author: user?.displayName || user?.email || 'Explorer',
+      tagline: data.tagline,
+      category: data.category,
+      price: data.price,
+      isPublished: data.visibility === 'marketplace',
+      settings: { mps: data.storyType, transition: 'fade', filter: 'none' },
+      pages: [{ text: '', images: [] }]
+    });
+    setShowCreateModal(false);
+    setView('edit');
   };
 
   const handleSave = async (data) => {
-    console.log("handleSave called with:", data);
-    console.log("Current user:", user);
-    console.log("Current db:", db);
-    
-    if (!user) {
-      console.error("Save failed: No user", { user, authLoading, userLoading });
-      alert("Error: Not signed in. The app is trying to sign you in anonymously. Please wait a moment and try again, or refresh the page.");
-      return;
-    }
-    
-    if (!db) {
-      console.error("Save failed: No db", { db });
-      alert("Error: Database not connected. Please refresh the page.");
+    if (!user || !db) {
+      alert('Still connecting... please wait a moment and try saving again.');
+      console.error('Save blocked: missing user or db', { user, db });
       return;
     }
     
     try {
       const appId = getAppId();
-      console.log("App ID:", appId);
       
-      // Clean up data - remove file objects, keep only URLs (do this asynchronously)
-      const cleanData = await new Promise((resolve) => {
-        // Use requestIdleCallback to avoid blocking
-        const cleanup = () => {
-          const cleaned = {
-            ...data,
-            pages: data.pages.map(page => ({
-              ...page,
-              images: page.images.map(img => ({ url: img.url })) // Remove file objects
-            }))
-          };
-          resolve(cleaned);
-        };
-        
-        if (window.requestIdleCallback) {
-          window.requestIdleCallback(cleanup, { timeout: 100 });
-        } else {
-          setTimeout(cleanup, 0);
-        }
-      });
-      
-      const payload = { 
-        ...cleanData, 
+      // Separate story metadata (no pages in main doc)
+      const { pages, ...storyMeta } = data;
+      const storyPayload = { 
+        ...storyMeta, 
         updatedAt: serverTimestamp(), 
         userId: user.uid 
       };
       
-      console.log("Saving payload:", payload);
+      let storyId = data.id;
       
-      if (data.id) {
-        console.log("Updating existing story:", data.id);
+      // Save/update story document
+      if (storyId) {
         await updateDoc(
-          doc(db, 'artifacts', appId, 'public', 'data', 'stories', data.id), 
-          payload
+          doc(db, 'artifacts', appId, 'public', 'data', 'stories', storyId), 
+          storyPayload
         );
-        console.log("Story updated successfully!");
       } else {
-        console.log("Creating new story");
-        const newPayload = { ...payload, createdAt: serverTimestamp() };
-        const docRef = await addDoc(
+        const newPayload = { ...storyPayload, createdAt: serverTimestamp() };
+        const storyRef = await addDoc(
           collection(db, 'artifacts', appId, 'public', 'data', 'stories'), 
           newPayload
         );
-        console.log("Story saved successfully! ID:", docRef.id);
+        storyId = storyRef.id;
       }
       
-      // Navigate back to library (yield to browser first)
-      setTimeout(() => {
-        setView('library');
-      }, 0);
+      // Save pages to pagesPublic and pagesPrivate subcollections
+      if (pages && pages.length > 0 && storyId) {
+        for (let i = 0; i < pages.length; i++) {
+          const page = pages[i];
+          const pageId = `page-${i}`;
+          
+          // Public data (text + publicImageRefs)
+          const publicData = {
+            index: i,
+            text: page.text || '',
+            publicImageRefs: (page.images || []).map(img => ({
+              publicUrl: img.url,
+              publicPath: img.path || '',
+            })),
+          };
+          
+          // Private data (originalImageRefs)
+          const privateData = {
+            index: i,
+            originalImageRefs: (page.images || []).map(img => ({
+              storagePath: img.path || img.url,
+            })),
+          };
+          
+          // Write to pagesPublic
+          await setDoc(
+            doc(db, 'artifacts', appId, 'public', 'data', 'stories', storyId, 'pagesPublic', pageId),
+            publicData
+          );
+          
+          // Write to pagesPrivate
+          await setDoc(
+            doc(db, 'artifacts', appId, 'public', 'data', 'stories', storyId, 'pagesPrivate', pageId),
+            privateData
+          );
+        }
+      }
+      
+      setView('library');
     } catch (e) {
-      console.error("Save error:", e);
-      alert(`Error saving story: ${e.message || "Please check console (F12) for details."}`);
-      throw e; // Re-throw so EditorView can catch it
+      alert("Error saving. Please try again.");
+      console.error('Save error:', e);
     }
   };
 
@@ -198,15 +224,92 @@ export default function App() {
     alert("Simulated Purchase - Marketplace economy coming soon!");
   };
 
+  if (authError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="max-w-md">
+          <div className="glass-dark rounded-3xl p-8 text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-ember-400/20 to-ember-500/20 ring-8 ring-ember-400/10">
+              <div className="text-4xl">🔒</div>
+            </div>
+            
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold text-white">Authentication Required</h1>
+              <p className="text-slate-300">{authError}</p>
+            </div>
+            
+            <div className="card-dark rounded-2xl p-5 text-left space-y-3">
+              <div className="flex items-center gap-2 text-ember-400 font-semibold">
+                <div className="w-1.5 h-1.5 rounded-full bg-ember-400 animate-pulse"></div>
+                Quick Fix
+              </div>
+              <ol className="text-slate-200 text-sm space-y-2 list-decimal list-inside">
+                <li>Visit <a href="https://console.firebase.google.com" target="_blank" rel="noopener noreferrer" className="text-ember-400 hover:text-ember-300 underline">Firebase Console</a></li>
+                <li>Select your project</li>
+                <li>Go to <span className="text-white font-medium">Authentication → Sign-in method</span></li>
+                <li>Enable <span className="text-white font-medium">"Anonymous"</span> authentication</li>
+                <li>Return here and click Retry</li>
+              </ol>
+            </div>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full btn-orange px-6 py-3.5 rounded-xl font-bold"
+            >
+              Retry Connection
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-amber-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="text-indigo-600 font-serif text-2xl font-bold animate-pulse">
-            Unfolding the Map...
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="relative w-20 h-20 mx-auto">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 animate-ping opacity-20"></div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 animate-pulse"></div>
+            <Heart size={40} className="absolute inset-0 m-auto text-white fill-white animate-float" />
           </div>
-          <div className="text-slate-500 text-sm">
-            Loading your stories...
+          <div className="space-y-2">
+            <h2 className="text-xl font-bold text-white">Unfolding the Map</h2>
+            <div className="flex items-center justify-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-ember-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-ember-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-ember-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="max-w-md">
+          <div className="glass-dark rounded-3xl p-8 text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-ember-400/20 to-ember-500/20 ring-8 ring-ember-400/10 animate-pulse">
+              <div className="text-4xl">⏳</div>
+            </div>
+            
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold text-white">Connecting...</h1>
+              <p className="text-slate-300">Setting up your secure session</p>
+            </div>
+            
+            <p className="text-sm text-slate-400">
+              If this takes too long, anonymous auth might not be enabled
+            </p>
+            
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full px-6 py-3 glass-warm hover:bg-white/10 rounded-xl font-semibold text-white transition-all"
+            >
+              Refresh Page
+            </button>
           </div>
         </div>
       </div>
@@ -214,60 +317,76 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-amber-50 font-sans text-slate-800">
+    <div className="min-h-screen font-sans text-slate-50">
       <Navigation 
-        view={view === 'library' || view === 'market' ? view : 'library'} 
+        view={view}
         userData={userData} 
         onViewChange={(v) => setView(v)}
+        onCreateStory={() => setShowCreateModal(true)}
       />
 
-      {view === 'read' && currentStory ? (
-        <main role="main">
-          <ReaderView
-            story={currentStory}
-            onBack={() => setView('library')}
+      <main className="max-w-6xl mx-auto p-6 pt-8">
+        {view === 'library' && (
+          <LibraryView
+            stories={stories}
+            userData={userData}
+            onCreateStory={() => setShowCreateModal(true)}
+            onReadStory={(story) => {
+              setCurrentStory(story);
+              setView('read');
+            }}
+            onEditStory={(story) => {
+              setCurrentStory(story);
+              setView('edit');
+            }}
+            onShowLegacyModal={() => setShowLegacyModal(true)}
+            onBrowseMarket={() => setView('market')}
           />
-        </main>
-      ) : (
-        <main className="max-w-6xl mx-auto p-6" role="main">
-          {view === 'library' && (
-            <LibraryView
-              stories={stories}
-              userData={userData}
-              onCreateStory={() => {
-                setCurrentStory(null);
-                setView('edit');
-              }}
-              onReadStory={(story) => {
-                setCurrentStory(story);
-                setView('read');
-              }}
-              onEditStory={(story) => {
-                setCurrentStory(story);
-                setView('edit');
-              }}
-              onShowLegacyModal={() => setShowLegacyModal(true)}
-              onBrowseMarket={() => setView('market')}
-            />
-          )}
+        )}
 
-          {view === 'market' && (
-            <MarketView
-              marketStories={marketStories}
-              onPurchase={handlePurchase}
-              onBackToLibrary={() => setView('library')}
-            />
-          )}
+        {view === 'market' && (
+          <MarketView
+            marketStories={marketStories}
+            onPurchase={handlePurchase}
+            onBackToLibrary={() => setView('library')}
+          />
+        )}
 
-          {view === 'edit' && (
-            <EditorView
-              initialData={currentStory}
-              onSave={handleSave}
-              onCancel={() => setView('library')}
-              isGold={userData.isGoldMember}
-            />
-          )}
-        </main>
+        {view === 'circles' && (
+          <CirclesView
+            onCreateCircle={() => alert('Create Circle feature coming soon!')}
+            onJoinCircle={() => {
+              const code = prompt('Enter circle invite code:');
+              if (code) {
+                alert(`Joining circle with code: ${code} (feature coming soon!)`);
+              }
+            }}
+          />
+        )}
+
+        {view === 'profile' && (
+          <ProfileView
+            userData={userData}
+            storiesCreated={stories.length}
+            onShowLegacyModal={() => setShowLegacyModal(true)}
+          />
+        )}
+
+        {view === 'edit' && (
+          <EditorView
+            initialData={currentStory}
+            onSave={handleSave}
+            onCancel={() => setView('library')}
+            isGold={userData.isGoldMember}
+          />
+        )}
+      </main>
+
+      {view === 'read' && currentStory && (
+        <ReaderView
+          story={currentStory}
+          onBack={() => setView('library')}
+        />
       )}
 
       {showLegacyModal && (
@@ -276,7 +395,13 @@ export default function App() {
           onClose={() => setShowLegacyModal(false)}
         />
       )}
+
+      {showCreateModal && (
+        <CreateStoryModal
+          onClose={() => setShowCreateModal(false)}
+          onCreate={handleCreateStory}
+        />
+      )}
     </div>
   );
 }
-
