@@ -6,6 +6,8 @@ interface KidsImpactBannerProps {
   storiesHelping?: number;
 }
 
+const CREATOR_ROUTING_PERCENTAGE = 67; // Percentage of creators routing earnings to children
+
 export const KidsImpactBanner = ({ 
   variant = 'fund', 
   fundRaised = 4280, 
@@ -45,10 +47,10 @@ export const KidsImpactBanner = ({
         </div>
       </div>
       <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
-        <div className="h-full bg-gradient-to-r from-ember-400 to-ember-500 rounded-full" style={{ width: '67%' }} />
+        <div className="h-full bg-gradient-to-r from-ember-400 to-ember-500 rounded-full" style={{ width: `${CREATOR_ROUTING_PERCENTAGE}%` }} />
       </div>
       <div className="mt-2 text-xs text-slate-500 text-center">
-        67% of creators routing earnings to children's futures
+        {CREATOR_ROUTING_PERCENTAGE}% of creators routing earnings to children's futures
       </div>
     </div>
   );

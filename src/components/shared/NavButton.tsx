@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, cloneElement, isValidElement } from 'react';
 
 interface NavButtonProps {
   icon: ReactNode;
@@ -8,6 +8,13 @@ interface NavButtonProps {
 }
 
 export const NavButton = ({ icon, label, isActive, onClick }: NavButtonProps) => {
+  // Clone icon element and add fill class if active
+  const enhancedIcon = isValidElement(icon)
+    ? cloneElement(icon as any, { 
+        className: isActive ? 'fill-ember-400' : ''
+      })
+    : icon;
+
   return (
     <button
       type="button"
@@ -19,8 +26,8 @@ export const NavButton = ({ icon, label, isActive, onClick }: NavButtonProps) =>
       {isActive && (
         <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-ember-400 to-transparent rounded-full"></div>
       )}
-      <div className={isActive ? 'fill-ember-400 drop-shadow-lg' : ''}>
-        {icon}
+      <div className={isActive ? 'drop-shadow-lg' : ''}>
+        {enhancedIcon}
       </div>
       <span className="text-[11px] font-semibold tracking-wide">{label}</span>
     </button>

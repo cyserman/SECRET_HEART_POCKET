@@ -1,10 +1,17 @@
 import { Story } from '../../types';
 import { DEFAULT_IMAGES } from '../constants';
 
+interface StorySettings {
+  mps?: number;
+  mpsDefault?: number;
+  transition?: string;
+  filter?: string;
+}
+
 /**
  * Normalize story settings with safe defaults
  */
-export const normalizeStorySettings = (settings?: any) => {
+export const normalizeStorySettings = (settings?: StorySettings) => {
   const mps = Math.min(Math.max(settings?.mps || 10, 1), 10); // Clamp 1-10
   return {
     mps,
