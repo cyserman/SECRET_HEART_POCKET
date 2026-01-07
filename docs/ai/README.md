@@ -2,8 +2,18 @@
 
 **Start here** if you're an AI agent or human contributor working on this project.
 
+## 🚀 Session Start (REQUIRED)
+
+**New session?** Follow the **[Session Start Checklist](./SESSION_START_CHECKLIST.md)** first!
+
+**Quick steps:**
+1. Read anchor documents (README, PROJECT_STATE, ORIGAMI_PROTOCOL, AGENTS)
+2. Start dev server: `npm run dev` (opens at http://localhost:5173)
+3. Review current phase and tasks in PROJECT_STATE.md
+
 ## 🧭 Navigation
 
+- **[SESSION_START_CHECKLIST.md](./SESSION_START_CHECKLIST.md)** — Required workflow for every session
 - **[PROJECT_STATE.md](../../PROJECT_STATE.md)** — The living brain. Current status, roadmap, and change log.
 - **[AGENTS.md](./AGENTS.md)** — Agent roles and operating principles (CHRISTINE, The Driver).
 - **[AGENTS_MODEL.md](./AGENTS_MODEL.md)** — Model instructions for story writer and voice narrator (bedtime-safe guardrails).
