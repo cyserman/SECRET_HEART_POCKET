@@ -4,6 +4,7 @@ import { collection, query, onSnapshot } from 'firebase/firestore';
 import { db, getAppId } from '../lib/firebase';
 import { Story, UserData } from '../types';
 import { DEFAULT_IMAGES } from '../lib/constants';
+import { normalizeStory } from '../lib/utils/storyHelpers';
 
 // MPS Logic: Memories Per Story (1-10)
 // This hook manages story data with MPS constraints
@@ -69,28 +70,9 @@ export const useStory = (user: User | null, userData: UserData) => {
       );
 
       // Normalize stories (apply MPS logic, ensure images exist)
-      const normalize = (s: Story): Story => {
-        const mps = Math.min(Math.max(s.settings?.mps || 10, 1), 10); // Clamp 1-10
-        return {
-          ...s,
-          pages: (s.pages || []).map(p => ({ 
-            ...p, 
-            images: p.images && p.images.length > 0 
-              ? p.images 
-              : [{ url: DEFAULT_IMAGES[0] }] 
-          })),
-          settings: { 
-            mps,
-            mpsDefault: s.settings?.mpsDefault ?? mps, // Add safe default
-            transition: s.settings?.transition || 'fade', 
-            filter: s.settings?.filter || 'none' 
-          }
-        };
-      };
-
       setStories(
         (myStories.length > 0 ? myStories : [defaultStory])
-          .map(normalize)
+          .map(normalizeStory)
           .sort((a, b) => 
           (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
         )
@@ -98,7 +80,7 @@ export const useStory = (user: User | null, userData: UserData) => {
       
       setMarketStories(
         (market.length > 0 ? market : [defaultStory])
-          .map(normalize)
+          .map(normalizeStory)
           .sort((a, b) => 
           (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
         )

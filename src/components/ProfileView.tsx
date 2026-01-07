@@ -1,5 +1,6 @@
 import { Award, Lock, Mic, ThumbsUp, Book } from 'lucide-react';
 import { UserData } from '../types';
+import { Avatar } from './shared/Avatar';
 
 interface ProfileViewProps {
   userData: UserData;
@@ -25,9 +26,9 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
       {/* Profile Header */}
       <div className="glass-dark rounded-3xl p-6 border border-slate-700">
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-3xl text-white font-bold shadow-xl shadow-ember-500/30 border-4 border-ember-300">
+          <Avatar size="xl" className="shadow-xl shadow-ember-500/30 border-4 border-ember-300">
             D
-          </div>
+          </Avatar>
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
               Daddy
@@ -88,9 +89,9 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
       {/* Legacy Vault Card */}
       <div className="card-dark rounded-2xl p-6 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-ember-400 to-ember-500 rounded-full flex items-center justify-center">
+          <Avatar size="md">
             <Lock size={24} className="text-white" />
-          </div>
+          </Avatar>
           <div className="flex-1">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               Legacy Vault

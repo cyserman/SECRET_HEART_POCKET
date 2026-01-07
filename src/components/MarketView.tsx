@@ -2,6 +2,9 @@ import { Lock, Heart, Gift, Sparkles } from 'lucide-react';
 import { Story } from '../types';
 import { DEFAULT_IMAGES } from '../lib/constants';
 import { useState } from 'react';
+import { KidsImpactBanner } from './shared/KidsImpactBanner';
+import { Avatar } from './shared/Avatar';
+import { Badge } from './shared/Badge';
 
 interface MarketViewProps {
   marketStories: Story[];
@@ -21,29 +24,7 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
     return (
       <div className="space-y-6 pb-24">
         {/* Kids Impact Banner */}
-        <div className="glass-warm rounded-2xl p-6 border border-ember-400/30">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center shadow-lg">
-                <Heart size={24} className="text-white fill-white" />
-              </div>
-              <div>
-                <div className="text-sm text-slate-400">Kids Impact / Future Fund</div>
-                <div className="text-2xl font-black text-white">${kidsImpactTotal.toLocaleString()}</div>
-              </div>
-            </div>
-          <div className="text-right">
-            <div className="text-lg font-bold text-ember-400">{storiesHelping}</div>
-            <div className="text-xs text-slate-400">Stories helping</div>
-          </div>
-        </div>
-        <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-ember-400 to-ember-500 rounded-full" style={{ width: '67%' }} />
-          </div>
-          <div className="mt-2 text-xs text-slate-500 text-center">
-            67% of creators routing earnings to children's futures
-          </div>
-        </div>
+        <KidsImpactBanner variant="impact" fundRaised={kidsImpactTotal} storiesHelping={storiesHelping} />
 
         <div className="glass-warm rounded-2xl p-10 text-center space-y-4 border border-white/10">
           <div className="inline-flex items-center gap-2 bg-ember-400/20 text-ember-400 px-4 py-2 rounded-full text-xs font-bold border border-ember-400/30">
@@ -69,23 +50,7 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
   return (
     <div className="space-y-6 pb-24">
       {/* Kids Impact Banner */}
-      <div className="glass-dark rounded-2xl p-6 border border-orange-500/20">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
-              <Heart size={24} className="text-white fill-white" />
-            </div>
-            <div>
-              <div className="text-sm text-slate-400">Kids Impact / Future Fund</div>
-              <div className="text-2xl font-black text-white">${kidsImpactTotal.toLocaleString()}</div>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-lg font-bold text-orange-400">{storiesHelping}</div>
-            <div className="text-xs text-slate-500">Stories helping</div>
-          </div>
-        </div>
-      </div>
+      <KidsImpactBanner variant="impact" fundRaised={kidsImpactTotal} storiesHelping={storiesHelping} />
 
       {/* Category Carousels */}
       <div className="space-y-6">
@@ -202,27 +167,25 @@ const MarketStoryCard = ({ story, onPurchase, onGift }: MarketStoryCardProps) =>
       </div>
       
       {/* Price Badge */}
-      <div className="absolute top-2 right-2 bg-ember-400/90 backdrop-blur-sm text-white font-bold px-3 py-1.5 rounded-full shadow-lg text-xs border border-ember-300/30">
-        {story.price ? `${story.price}¢` : 'Free'}
+      <div className="absolute top-2 right-2">
+        <Badge variant="price">{story.price ? `${story.price}¢` : 'Free'}</Badge>
       </div>
       
       {/* Memory Count */}
-      <div className="absolute top-2 left-2 glass-warm text-white text-xs font-semibold px-2 py-1 rounded-full border border-white/15">
-        ○ {story.pages?.length || 1}
+      <div className="absolute top-2 left-2">
+        <Badge variant="memory">○ {story.pages?.length || 1}</Badge>
       </div>
       
       {/* Category Badge */}
-      <div className="absolute bottom-2 left-2 bg-ember-500/90 backdrop-blur-sm text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider border border-ember-300/30">
-        {story.category || 'FAMILY'}
+      <div className="absolute bottom-2 left-2">
+        <Badge variant="category">{story.category || 'FAMILY'}</Badge>
       </div>
     </div>
     
     <div className="p-3 space-y-3">
       <h3 className="font-bold text-white text-sm leading-tight line-clamp-2">{story.title}</h3>
       <div className="flex items-center gap-2">
-        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-[10px] text-white font-bold">
-          {story.author?.[0] || 'M'}
-        </div>
+        <Avatar size="xs">{story.author?.[0] || 'M'}</Avatar>
         <span className="text-xs text-slate-300">By {story.author}</span>
       </div>
       <div className="flex gap-2">
