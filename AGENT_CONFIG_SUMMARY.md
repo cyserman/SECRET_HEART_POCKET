@@ -11,7 +11,7 @@ This document summarizes the changes made to ensure all local AI agents (GitHub 
 
 ## Problem Statement
 
-> "ensure that al local agents know to read anchors, readme and open local browser during sesions"
+> "ensure that all local agents know to read anchors, readme and open local browser during sessions"
 
 The goal was to create clear, enforced guidelines so that AI coding assistants:
 1. Read key "anchor" documentation files at the start of each session
