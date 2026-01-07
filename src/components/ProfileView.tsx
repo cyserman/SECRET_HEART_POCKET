@@ -1,6 +1,7 @@
 import { Award, Lock, Mic, ThumbsUp, Book } from 'lucide-react';
 import { UserData } from '../types';
 import { Avatar } from './shared/Avatar';
+import { Button } from './shared/Button';
 
 interface ProfileViewProps {
   userData: UserData;
@@ -107,12 +108,9 @@ export const ProfileView = ({ userData, storiesCreated, onShowLegacyModal }: Pro
           </div>
         </div>
         {!userData.isGoldMember && (
-          <button 
-            onClick={onShowLegacyModal}
-            className="w-full px-6 py-3 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold rounded-xl shadow-lg shadow-ember-500/20 hover:-translate-y-0.5 active:scale-95 transition-all"
-          >
+          <Button onClick={onShowLegacyModal} className="w-full">
             Unlock Legacy
-          </button>
+          </Button>
         )}
       </div>
 

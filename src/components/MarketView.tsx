@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { KidsImpactBanner } from './shared/KidsImpactBanner';
 import { Avatar } from './shared/Avatar';
 import { Badge } from './shared/Badge';
+import { Button } from './shared/Button';
 
 interface MarketViewProps {
   marketStories: Story[];
@@ -123,15 +124,15 @@ export const MarketView = ({ marketStories, onPurchase, onBackToLibrary }: Marke
               <p className="text-sm text-slate-300">
                 Send "{selectedStory.title}" as a gift. Credits will flow to their collection and support the Kids Future Fund.
               </p>
-              <button 
+              <Button 
                 onClick={() => {
                   onPurchase(selectedStory);
                   setShowGiftModal(false);
-                }}
-                className="w-full px-6 py-3 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold rounded-xl shadow-lg shadow-ember-500/30 hover:-translate-y-0.5 active:scale-95 transition-all"
+                }} 
+                className="w-full"
               >
                 Send Gift
-              </button>
+              </Button>
               <button 
                 onClick={() => setShowGiftModal(false)}
                 className="w-full px-6 py-3 glass-warm text-slate-300 font-semibold rounded-xl hover:bg-white/10 active:scale-95 transition-all"
@@ -189,12 +190,9 @@ const MarketStoryCard = ({ story, onPurchase, onGift }: MarketStoryCardProps) =>
         <span className="text-xs text-slate-300">By {story.author}</span>
       </div>
       <div className="flex gap-2">
-        <button 
-          onClick={() => onPurchase(story)} 
-          className="flex-1 bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold py-2 text-sm rounded-xl shadow-lg shadow-ember-500/20 hover:-translate-y-0.5 active:scale-95 transition-all"
-        >
+        <Button onClick={() => onPurchase(story)} size="sm" className="flex-1">
           Unlock
-        </button>
+        </Button>
         <button 
           onClick={() => onGift(story)}
           className="px-3 py-2 glass-warm text-ember-400 rounded-xl border border-ember-400/30 hover:bg-ember-400/20 active:scale-95 transition-all"

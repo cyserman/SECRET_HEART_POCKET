@@ -1,4 +1,5 @@
 import { Heart, Smartphone, UploadCloud } from 'lucide-react';
+import { Button } from './shared/Button';
 
 interface LegacyModalProps {
   onActivate: () => void;
@@ -24,13 +25,9 @@ export const LegacyModal = ({ onActivate, onClose }: LegacyModalProps) => {
             <div className="flex-1 text-sm font-bold text-slate-200">Upload Photo of Bank Book</div>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={onActivate} 
-          className="w-full bg-gradient-to-r from-ember-400 to-ember-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-ember-500/30 hover:shadow-xl active:scale-95 transition-all"
-        >
+        <Button onClick={onActivate} size="lg" className="w-full">
           Verify & Unlock Gold
-        </button>
+        </Button>
         <button
           type="button"
           onClick={onClose} 

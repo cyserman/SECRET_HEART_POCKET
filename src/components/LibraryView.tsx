@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { KidsImpactBanner } from './shared/KidsImpactBanner';
 import { Avatar } from './shared/Avatar';
 import { Badge } from './shared/Badge';
+import { Button } from './shared/Button';
 
 interface LibraryViewProps {
   stories: Story[];
@@ -70,12 +71,9 @@ export const LibraryView = ({
               <p className="text-sm opacity-95">Verify a child's bank account to get Gold features.</p>
             </div>
           </div>
-          <button 
-            onClick={onShowLegacyModal} 
-            className="bg-white text-ember-600 px-6 py-3 rounded-full font-bold text-sm active:scale-95 hover:shadow-xl transition-all shadow-lg"
-          >
+          <Button onClick={onShowLegacyModal} className="bg-white text-ember-600 shadow-lg">
             Activate Now
-          </button>
+          </Button>
         </div>
       )}
 
