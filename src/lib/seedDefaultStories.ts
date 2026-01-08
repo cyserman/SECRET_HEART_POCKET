@@ -6,7 +6,7 @@ export const DEFAULT_STORY_ID = "default_leif_lewie_heart_pocket";
 
 const TITLE = "My Daddy Never Sleeps";
 const SUBTITLE = "Leif & Lewie — The Heart Pocket";
-const VISIBILITY = "public" as const;
+// const VISIBILITY = "public" as const; // Unused
 const MPS = 6;
 
 const PAGES: string[] = [
@@ -92,4 +92,3 @@ export async function seedDefaultHeartPocketStory() {
   console.log(`✅ Seeded default story: ${TITLE} (${PAGES.length} pages)`);
   return { seeded: true as const, id: DEFAULT_STORY_ID };
 }
-
