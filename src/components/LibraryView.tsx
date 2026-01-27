@@ -3,6 +3,10 @@ import { Story, UserData } from '../types';
 import { FILTERS } from '../lib/constants';
 import { DEFAULT_IMAGES } from '../lib/constants';
 import { useState } from 'react';
+import { KidsImpactBanner } from './shared/KidsImpactBanner';
+import { Avatar } from './shared/Avatar';
+import { Badge } from './shared/Badge';
+import { Button } from './shared/Button';
 
 interface LibraryViewProps {
   stories: Story[];
@@ -36,16 +40,7 @@ export const LibraryView = ({
   return (
     <div className="space-y-6 pb-24">
       {/* Kids Future Fund Banner */}
-      <div className="glass-warm p-4 rounded-2xl flex items-center justify-between border border-ember-400/30">
-        <div className="flex items-center gap-3">
-          <Rocket size={20} className="text-ember-300" />
-          <span className="text-sm font-semibold text-slate-200">Kids Future Fund</span>
-        </div>
-        <div className="flex items-center gap-2 bg-gradient-to-r from-ember-400 to-ember-500 px-4 py-2 rounded-full shadow-lg shadow-ember-500/30">
-          <DollarSign size={16} className="text-white" />
-          <span className="text-white font-bold">${kidsFundRaised.toLocaleString()} Raised</span>
-        </div>
-      </div>
+      <KidsImpactBanner variant="fund" fundRaised={kidsFundRaised} />
 
       {/* Category Filters */}
       <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
@@ -76,12 +71,9 @@ export const LibraryView = ({
               <p className="text-sm opacity-95">Verify a child's bank account to get Gold features.</p>
             </div>
           </div>
-          <button 
-            onClick={onShowLegacyModal} 
-            className="bg-white text-ember-600 px-6 py-3 rounded-full font-bold text-sm active:scale-95 hover:shadow-xl transition-all shadow-lg"
-          >
+          <Button onClick={onShowLegacyModal} className="bg-white text-ember-600 shadow-lg">
             Activate Now
-          </button>
+          </Button>
         </div>
       )}
 
@@ -102,13 +94,13 @@ export const LibraryView = ({
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
             
             {/* Category Badge */}
-            <div className="absolute top-3 left-3 bg-ember-500/90 backdrop-blur-sm text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-md tracking-wider shadow-lg border border-ember-300/30">
-              {heroStory.category || 'FAMILY'}
+            <div className="absolute top-3 left-3">
+              <Badge variant="category">{heroStory.category || 'FAMILY'}</Badge>
             </div>
             
             {/* Memory Count */}
-            <div className="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full border border-slate-700">
-              ○ {heroStory.pages?.length || 1}
+            <div className="absolute top-3 right-3">
+              <Badge variant="memory">○ {heroStory.pages?.length || 1}</Badge>
             </div>
             
             {/* Story Info */}
@@ -118,9 +110,7 @@ export const LibraryView = ({
                 <p className="text-slate-300 text-sm mb-3">{heroStory.tagline}</p>
               )}
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-xs text-white font-bold shadow-lg">
-                  {heroStory.author?.[0] || 'D'}
-                </div>
+                <Avatar size="xs">{heroStory.author?.[0] || 'D'}</Avatar>
                 <span className="text-slate-300 text-xs font-medium">Narrated by {heroStory.author || 'Dad'}</span>
               </div>
             </div>
@@ -228,21 +218,19 @@ const StoryCard = ({ story, onRead, onEdit, compact }: StoryCardProps) => (
       />
       
       {/* Memory Count Badge - Top Right */}
-      <div className="absolute top-2 right-2 bg-slate-900/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-slate-700">
-        ○ {story.pages?.length || 1}
+      <div className="absolute top-2 right-2">
+        <Badge variant="memory">○ {story.pages?.length || 1}</Badge>
       </div>
       
       {/* Category Badge - Top Left */}
       <div className="absolute top-2 left-2">
-        <div className="bg-ember-500/90 backdrop-blur-sm text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider shadow-lg border border-ember-300/30">
-          {story.category || 'FAMILY'}
-        </div>
+        <Badge variant="category">{story.category || 'FAMILY'}</Badge>
       </div>
 
       {/* Price Badge (if has price) */}
       {story.price && (
-        <div className="absolute bottom-2 right-2 bg-ember-400/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg border border-ember-300/30">
-          {story.price} ¢
+        <div className="absolute bottom-2 right-2">
+          <Badge variant="price">{story.price} ¢</Badge>
         </div>
       )}
     </div>
@@ -259,9 +247,7 @@ const StoryCard = ({ story, onRead, onEdit, compact }: StoryCardProps) => (
       {/* Author & Actions */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-1.5">
-          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center text-[10px] text-white font-bold shadow-sm">
-            {story.author?.[0] || 'D'}
-          </div>
+          <Avatar size="xs">{story.author?.[0] || 'D'}</Avatar>
           <span className="text-xs text-slate-400 font-medium">{story.author || 'Dad'}</span>
         </div>
         <button 

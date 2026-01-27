@@ -1,6 +1,8 @@
 import { Heart, Home, Users, ShoppingBag, User, Flame, Coins } from 'lucide-react';
 import { UserData } from '../types';
 import { CLICKABLE_LAYER } from '../lib/ui/uiSafety';
+import { Avatar } from './shared/Avatar';
+import { NavButton } from './shared/NavButton';
 
 interface NavigationProps {
   view: string;
@@ -38,10 +40,11 @@ export const Navigation = ({ view, userData, onViewChange, onCreateStory, onProf
           <button
             type="button"
             onClick={onProfileClick || (() => onViewChange('profile'))}
-            className="w-9 h-9 rounded-full bg-gradient-to-br from-ember-400 to-ember-500 flex items-center justify-center ring-2 ring-ember-400/30 ring-offset-2 ring-offset-night-950 shadow-lg hover:scale-110 active:scale-95 transition-all cursor-pointer"
             aria-label="Open profile"
           >
-            <User size={18} className="text-white" />
+            <Avatar size="sm" className="ring-2 ring-ember-400/30 ring-offset-2 ring-offset-night-950 hover:scale-110 active:scale-95 transition-all cursor-pointer">
+              <User size={18} className="text-white" />
+            </Avatar>
           </button>
         </div>
       </header>
@@ -49,61 +52,33 @@ export const Navigation = ({ view, userData, onViewChange, onCreateStory, onProf
       {/* Bottom Navigation */}
       <nav className={["fixed bottom-0 left-0 right-0 z-[100] glass-warm border-t border-white/10", CLICKABLE_LAYER].join(" ")}>
         <div className="max-w-6xl mx-auto flex justify-around items-center py-3">
-          <button
-            type="button"
+          <NavButton
+            icon={<Home size={24} />}
+            label="Home"
+            isActive={view === 'library'}
             onClick={() => onViewChange('library')}
-            className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
-              view === 'library' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            {view === 'library' && (
-              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-ember-400 to-transparent rounded-full"></div>
-            )}
-            <Home size={24} className={view === 'library' ? 'fill-ember-400 drop-shadow-lg' : ''} />
-            <span className="text-[11px] font-semibold tracking-wide">Home</span>
-          </button>
+          />
           
-          <button
-            type="button"
+          <NavButton
+            icon={<Users size={24} />}
+            label="Circles"
+            isActive={view === 'circles'}
             onClick={() => onViewChange('circles')}
-            className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
-              view === 'circles' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            {view === 'circles' && (
-              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-ember-400 to-transparent rounded-full"></div>
-            )}
-            <Users size={24} className={view === 'circles' ? 'fill-ember-400 drop-shadow-lg' : ''} />
-            <span className="text-[11px] font-semibold tracking-wide">Circles</span>
-          </button>
+          />
           
-          <button
-            type="button"
+          <NavButton
+            icon={<ShoppingBag size={24} />}
+            label="Market"
+            isActive={view === 'market'}
             onClick={() => onViewChange('market')}
-            className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
-              view === 'market' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            {view === 'market' && (
-              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-ember-400 to-transparent rounded-full"></div>
-            )}
-            <ShoppingBag size={24} className={view === 'market' ? 'fill-ember-400 drop-shadow-lg' : ''} />
-            <span className="text-[11px] font-semibold tracking-wide">Market</span>
-          </button>
+          />
           
-          <button
-            type="button"
+          <NavButton
+            icon={<User size={24} />}
+            label="Profile"
+            isActive={view === 'profile'}
             onClick={() => onViewChange('profile')}
-            className={`flex flex-col items-center gap-1.5 px-6 py-2 transition-all relative rounded-xl ${
-              view === 'profile' ? 'text-ember-400' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            {view === 'profile' && (
-              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-ember-400 to-transparent rounded-full"></div>
-            )}
-            <User size={24} className={view === 'profile' ? 'fill-ember-400 drop-shadow-lg' : ''} />
-            <span className="text-[11px] font-semibold tracking-wide">Profile</span>
-          </button>
+          />
         </div>
         
         {/* FAB (Floating Action Button) */}

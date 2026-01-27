@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db, getAppId } from '../lib/firebase';
 import { DEFAULT_IMAGES } from '../lib/constants';
+import { normalizeStorySettings } from '../lib/utils/storyHelpers';
 
 export interface PublicPage {
   index: number;
@@ -88,15 +89,5 @@ export const useReaderData = (storyId: string | undefined) => {
   return { pages, loading, error };
 };
 
-/**
- * Helper to normalize story settings with safe defaults
- */
-export const normalizeStorySettings = (settings?: any) => {
-  return {
-    mps: settings?.mps ?? 10,
-    mpsDefault: settings?.mpsDefault ?? settings?.mps ?? 10, // Add mpsDefault fallback
-    transition: settings?.transition || 'fade',
-    filter: settings?.filter || 'none'
-  };
-};
+export { normalizeStorySettings };
 
