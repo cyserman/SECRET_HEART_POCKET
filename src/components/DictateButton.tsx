@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Mic, MicOff } from "lucide-react";
 import { useDictation } from "../hooks/useDictation";
 

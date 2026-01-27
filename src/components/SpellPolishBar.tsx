@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Wand2 } from "lucide-react";
 import { gentlePolish } from "../lib/ui/textPolish";
 
