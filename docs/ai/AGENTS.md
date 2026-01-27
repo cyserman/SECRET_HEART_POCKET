@@ -9,6 +9,40 @@ and emotional integrity**, especially for children and families.
 
 ---
 
+## 🚀 Session Start Workflow (REQUIRED)
+
+**Every agent session MUST begin with these steps:**
+
+### Step 1: Read Anchor Documents
+Read these files in order to understand the project context:
+1. `README.md` - Project overview, quick start, features
+2. `PROJECT_STATE.md` - Current status, active phase, recent changes
+3. `ORIGAMI_PROTOCOL.md` - Development methodology (Folded Map approach)
+4. `docs/ai/AGENTS.md` - This file (agent roles and principles)
+
+### Step 2: Start Development Server
+```bash
+cd /home/runner/work/SECRET_HEART_POCKET/SECRET_HEART_POCKET
+npm run dev
+```
+- Server runs at `http://localhost:5173`
+- Keep running throughout session
+- Open browser to test changes immediately
+
+### Step 3: Verify Project State
+- Check `git status` for uncommitted work
+- Review latest changelog in `PROJECT_STATE.md`
+- Identify current phase and pending tasks
+- Note any active bugfixes or blockers
+
+### Step 4: During Development
+- Test changes in browser immediately after making them
+- Verify TypeScript compilation: `npm run lint`
+- Update `PROJECT_STATE.md` after completing tasks
+- Follow Origami Protocol (stay in current fold/phase)
+
+---
+
 ## 🧭 Core Roles
 
 ### 👩‍✈️ CHRISTINE — Autonomous Project Lead

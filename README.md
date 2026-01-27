@@ -6,6 +6,18 @@ Created for Leif & Lewie. Never stop exploring.
 
 ---
 
+## 🤖 For AI Agents & Contributors
+
+**Starting a new session?** Read the [Session Start Checklist](docs/ai/SESSION_START_CHECKLIST.md) first!
+
+**Key documents to review:**
+- `PROJECT_STATE.md` - Current status and active tasks
+- `ORIGAMI_PROTOCOL.md` - Development methodology
+- `docs/ai/AGENTS.md` - Agent roles and principles
+- `.cursorrules` - Cursor-specific guidelines
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -24,7 +36,7 @@ npm install
 npm run dev
 ```
 
-The app will start at `http://localhost:3000`
+The app will start at `http://localhost:5173`
 
 ### Build
 

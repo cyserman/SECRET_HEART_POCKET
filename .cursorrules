@@ -9,6 +9,28 @@ This is an intergenerational legacy platform called "Secret Heart Pocket" - a di
 - Styling: Tailwind CSS
 - Deployment: Firebase Hosting with GitHub Actions
 
+## 🎯 Session Start Protocol (Required)
+**ALWAYS do these steps when starting a new session:**
+
+1. **Read Anchor Documents** (in this order):
+   - `README.md` - Project overview and quick start guide
+   - `PROJECT_STATE.md` - Current project status and active tasks
+   - `ORIGAMI_PROTOCOL.md` - Development methodology and workflow
+   - `docs/ai/AGENTS.md` - Agent roles and operating principles
+
+2. **Start Local Development Server**:
+   ```bash
+   npm run dev
+   ```
+   - Opens app at `http://localhost:5173`
+   - Keep server running during session for live testing
+   - Test changes immediately in browser
+
+3. **Verify Current State**:
+   - Check git status for uncommitted changes
+   - Review most recent changelog entry in PROJECT_STATE.md
+   - Identify current phase and active tasks
+
 ## Key Files
 - Core App: `src/App.tsx`
 - Components: `src/components/`
@@ -22,12 +44,20 @@ This is an intergenerational legacy platform called "Secret Heart Pocket" - a di
 3. Follow existing component patterns
 4. Test auth flows thoroughly
 5. Optimize for mobile/responsive design
+6. **Always test changes in browser before committing**
 
 ## When Working on This Project
 - Reference `PROJECT_STATE.md` for current status
 - Check `docs/archive/` for troubleshooting guides if needed
 - Security rules in `firestore.rules` and `storage.rules`
 - CI/CD via `.github/workflows/firebase-deploy.yml`
+- Follow the Origami Protocol (focus on current fold/phase)
+
+## Testing & Verification
+- Run `npm run dev` to start local server
+- Test in browser at `http://localhost:5173`
+- Verify TypeScript with `npm run lint`
+- Build with `npm run build` before major commits
 
 ## Cost-Saving Tips
 - Only load files you need to modify
