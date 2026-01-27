@@ -6,7 +6,6 @@ export const DEFAULT_STORY_ID = "default_leif_lewie_heart_pocket";
 
 const TITLE = "My Daddy Never Sleeps";
 const SUBTITLE = "Leif & Lewie — The Heart Pocket";
-const VISIBILITY = "public" as const;
 const MPS = 6;
 
 const PAGES: string[] = [
