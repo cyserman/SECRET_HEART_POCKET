@@ -40,6 +40,23 @@ npm run preview
 
 ---
 
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+This project is ready for Vercel deployment! See the detailed guide:
+
+**[📖 Vercel Deployment Guide](./VERCEL_DEPLOYMENT_GUIDE.md)**
+
+Quick deploy:
+1. Push your code to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new)
+3. Import the repository
+4. Add environment variables (Firebase config)
+5. Deploy!
+
+---
+
 ## 🔧 Configuration
 
 ### Firebase Setup
