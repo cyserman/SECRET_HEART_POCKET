@@ -14,6 +14,12 @@ Open: **https://vercel.com/new**
 ### Step 2: Import Repository
 - Select `cyserman/SECRET_HEART_POCKET`
 - Click **Import**
+- Vercel will auto-detect settings from `package.json` and `package-lock.json`
+  - Framework: Vite
+  - Build Command: `npm run build`
+  - Install Command: `npm install`
+  - Output Directory: `dist`
+- **Don't change these auto-detected settings!**
 
 ### Step 3: Add Environment Variables
 Before deploying, add these environment variables:

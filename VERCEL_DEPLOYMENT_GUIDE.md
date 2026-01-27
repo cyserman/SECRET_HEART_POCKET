@@ -19,12 +19,14 @@ This guide will help you deploy the Secret Heart Pocket application to Vercel.
 
 ### Step 2: Configure Project
 
-The project is already configured with `vercel.json`, so most settings will be auto-detected:
+Vercel will auto-detect the configuration from your `package.json` and `package-lock.json`:
 
-- **Framework Preset:** Vite
-- **Build Command:** `npm run build`
-- **Output Directory:** `dist`
-- **Install Command:** `npm install`
+- **Framework Preset:** Vite (auto-detected)
+- **Build Command:** `npm run build` (auto-detected)
+- **Output Directory:** `dist` (auto-detected)
+- **Install Command:** `npm install` (auto-detected)
+
+You don't need to change these - Vercel will detect them automatically!
 
 ### Step 3: Add Environment Variables
 
